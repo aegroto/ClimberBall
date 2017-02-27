@@ -93,8 +93,6 @@ public class Main extends SimpleApplication {
         hasSecondChance=false;
     }
     
-    
-    Node particlesNode;
     @Override
     public void simpleInitApp() {
         this.setDisplayStatView(false);
@@ -114,32 +112,6 @@ public class Main extends SimpleApplication {
         initEnvironmentAppState=true;
         initStartMenu=true;
         //initGameOverMenu=true;
-        
-        particlesNode = new Node();
-        guiNode.attachChild(particlesNode);
-        
-        /** Explosion effect. Uses Texture from jme3-test-data library! */ 
-        ParticleEmitter debrisEffect = new ParticleEmitter("Debris", ParticleMesh.Type.Triangle, 10);
-        Material debrisMat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-        debrisMat.setTexture("Texture", assetManager.loadTexture("Debris.png"));
-        debrisEffect.setMaterial(debrisMat);
-        debrisEffect.setImagesX(3); debrisEffect.setImagesY(3); // 3x3 texture animation
-        debrisEffect.setRotateSpeed(4);
-        debrisEffect.setSelectRandomImage(true);
-        debrisEffect.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 1, 0));
-        debrisEffect.setStartColor(new ColorRGBA(1f, 1f, 1f, 1f));
-        debrisEffect.setEndColor(new ColorRGBA(1f, 1f, 1f, 1f));
-        debrisEffect.setGravity(0f,0f,0f);
-        debrisEffect.getParticleInfluencer().setVelocityVariation(.5f);
-        debrisEffect.setNumParticles(500);
-        debrisEffect.setParticlesPerSec(1000);
-        guiNode.attachChild(debrisEffect);
-        debrisEffect.setStartSize(.05f);
-        debrisEffect.setEndSize(.05f);
-        debrisEffect.emitAllParticles();
-        
-        particlesNode.attachChild(debrisEffect);        
-        particlesNode.setLocalTranslation(0f, 0f, 50f);
     }
     
     @Override 
@@ -201,8 +173,6 @@ public class Main extends SimpleApplication {
                 inGameMenu.setScoreText(playerAppState.getScore());
             }
         }
-        
-        guiNode.attachChild(particlesNode);
     }
     
     private void resetGame() {    

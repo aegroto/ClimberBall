@@ -22,9 +22,10 @@ import lombok.Getter;
  */
 public class Skin {    
     @Getter protected final BallSkin ballSkin;
-    @Getter protected final Texture plainParticles, rockParticles, sandParticles, grassParticles, blankTexture;
+    @Getter protected final Texture /*plainParticles, rockParticles, sandParticles, grassParticles,*/ blankTexture;
     @Getter protected final SurfaceSkin plainSkin, rockSkin, sandSkin, grassSkin;  
-    @Getter protected final Material backgroundMaterial;
+    @Getter protected final Material backgroundMaterial,
+                                     speedPickupMaterial;
     @Getter protected final BitmapFont guiFont;
     
     private Texture initializeTexture(AssetManager assetManager,String location) {
@@ -55,10 +56,13 @@ public class Skin {
         backgroundMaterial=mat.clone();
         backgroundMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/background.png"));
         
-        plainParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_plain.png");
+        speedPickupMaterial=mat.clone();
+        speedPickupMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/pickups/speed.png"));
+        
+        /*plainParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_plain.png");
         rockParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_rock.png");
         sandParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_sand.png");
-        grassParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_grass.png");
+        grassParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_grass.png");*/
         
         ballSkin=new BallSkin(
                 initializeTexture(assetManager,assetsFolder+"/ball/core_plain.png"),

@@ -32,8 +32,7 @@ import lombok.Setter;
  */
 public class EntityBall extends Entity {
     protected Geometry borderGeom;
-    protected Material borderMaterial,particleMat;
-    protected ParticleEmitter particleEmitter;
+    protected Material borderMaterial;
     
     protected Node bodyNode;
     @Getter @Setter protected byte currentForm;
@@ -70,40 +69,6 @@ public class EntityBall extends Entity {
         borderGeom.setMaterial(borderMaterial);  
         
         bodyNode.attachChild(borderGeom); 
-        
-        //Particles
-        /*particleEmitter=new ParticleEmitter("Ball Debris", ParticleMesh.Type.Triangle, 30);
-        particleMat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-        particleMat.setTexture("Texture", skin.getRockParticles());    
-        particleEmitter.setMaterial(particleMat);
-        particleEmitter.setImagesX(2);
-        particleEmitter.setImagesY(2); // 2x2 texture animation
-        particleEmitter.setEndColor(new ColorRGBA(1f, 0f, 0f, 1f));   // red
-        particleEmitter.setStartColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
-        particleEmitter.getParticleInfluencer().setVelocityVariation(0.3f);
-        particleEmitter.setSelectRandomImage(true);
-        
-        particleEmitter.setLocalTranslation(0f,0f,3f);*/
-            /** Explosion effect. Uses Texture from jme3-test-data library! */ 
-        particleEmitter = new ParticleEmitter("Debris", ParticleMesh.Type.Triangle, 10);
-        Material debrisMat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-        debrisMat.setTexture("Texture", assetManager.loadTexture("Debris.png"));
-        particleEmitter.setMaterial(debrisMat);
-        particleEmitter.setImagesX(3); particleEmitter.setImagesY(3); // 3x3 texture animation
-        particleEmitter.setRotateSpeed(4);
-        particleEmitter.setSelectRandomImage(true);
-        particleEmitter.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 4, 0));
-        particleEmitter.setStartColor(new ColorRGBA(1f, 1f, 1f, 1f));
-        particleEmitter.setGravity(0f,6f,0f);
-        particleEmitter.getParticleInfluencer().setVelocityVariation(.60f);
-        particleEmitter.setNumParticles(500);
-        particleEmitter.setStartSize(.05f);
-        particleEmitter.setEndSize(.05f);
-        particleEmitter.emitAllParticles();
-
-        updateParticles(null, (byte) 0);
-        
-        bodyNode.attachChild(particleEmitter);
         
         rootNode.attachChild(node);
         

@@ -93,7 +93,7 @@ public final class EnvironmentAppState extends BaseAppState {
         rootNode.attachChild(terrainNode);
         rootNode.attachChild(backgroundGeom);
         
-        backgroundGeom.setLocalTranslation(0f, 0f, -1f);
+        backgroundGeom.setLocalTranslation(0f, 0f, -5f);
         int initialChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f);
 
         
