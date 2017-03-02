@@ -5,6 +5,8 @@
  */
 package com.aegroto.climberball.chunk;
 
+import com.aegroto.climberball.entity.pickup.EntityPickup;
+import com.aegroto.climberball.entity.pickup.EntityPickupSpeed;
 import com.aegroto.climberball.shape.Polygon;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;

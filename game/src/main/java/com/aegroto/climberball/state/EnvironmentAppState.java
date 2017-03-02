@@ -16,6 +16,8 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import java.util.LinkedList;
 import com.aegroto.climberball.chunk.TerrainChunk;
+import com.aegroto.climberball.entity.pickup.EntityPickup;
+import com.aegroto.climberball.entity.pickup.EntityPickupSpeed;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
@@ -27,6 +29,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.concurrent.Callable;
@@ -44,6 +47,7 @@ public final class EnvironmentAppState extends BaseAppState {
     protected Geometry backgroundGeom;
     protected Material chunkMat;
     @Getter protected LinkedList<TerrainChunk> chunkList;
+    @Getter protected ArrayList<EntityPickup> pickupList;
     protected ScheduledThreadPoolExecutor executor;
     
     protected Skin skin;
@@ -51,6 +55,9 @@ public final class EnvironmentAppState extends BaseAppState {
     protected float 
             xBarrage,
             speed,
+            pickupSpawningFactor,
+            pickupSpawningVariation,
+            pickupSpawningVariationEnhancer,
             changeSurfaceTypeFactor,
             changeSurfaceVariation,
             changeSurfaceVariationEnhancer;
@@ -60,7 +67,8 @@ public final class EnvironmentAppState extends BaseAppState {
         this.executor=executor;
         this.skin=skin;
         
-        this.chunkList=new LinkedList();   
+        this.chunkList=new LinkedList();  
+        this.pickupList=new ArrayList();
     }
     
     @Override
@@ -84,6 +92,10 @@ public final class EnvironmentAppState extends BaseAppState {
     protected void onEnable() {
         xBarrage=-Helpers.getTerrainChunkSize();
         speed=Helpers.INITIAL_SPEED;
+        
+        pickupSpawningFactor=10f;
+        pickupSpawningVariation=Helpers.INITIAL_PICKUP_SPAWNING_VARIATION;  
+        pickupSpawningVariationEnhancer=0f;
         
         changeSurfaceTypeFactor=10f;
         changeSurfaceVariation=Helpers.INITIAL_CHANGE_SURFACE_VARIATION;  
@@ -122,7 +134,7 @@ public final class EnvironmentAppState extends BaseAppState {
     
     protected void generateChunk() {
         Vector3f startPoint;
-        int nextChunkSurface;
+        int nextChunkSurface, nextPickupType = 0;
         if(chunkList.size()>0) {
             startPoint=chunkList.getLast().getJointVector();          
             nextChunkSurface=chunkList.getLast().getSurfaceType();
@@ -132,6 +144,13 @@ public final class EnvironmentAppState extends BaseAppState {
         }
         
         TerrainChunk newChunk=null;
+        if(FastMath.nextRandomFloat() > pickupSpawningFactor) {
+            nextPickupType=FastMath.nextRandomInt(1, 1);
+            
+            pickupSpawningVariation=Helpers.INITIAL_PICKUP_SPAWNING_VARIATION-pickupSpawningVariationEnhancer;            
+            pickupSpawningFactor=1f;
+            pickupSpawningVariationEnhancer-=Helpers.PICKUP_SPAWNING_VARIATION_ENHANCING;
+        }
         
         if(FastMath.nextRandomFloat() > changeSurfaceTypeFactor) {
             nextChunkSurface=FastMath.nextRandomInt(0,3);
@@ -156,6 +175,15 @@ public final class EnvironmentAppState extends BaseAppState {
         }
         
         chunkList.addLast(newChunk);
+        
+        switch(nextPickupType) {
+            case 0: break;
+            case 1: 
+                pickupList.add(new EntityPickupSpeed(terrainNode,newChunk.getJointVector(),skin)); break;
+        }
+        
+        pickupSpawningFactor-= pickupSpawningVariation;
+        pickupSpawningVariation*=2;
         
         changeSurfaceTypeFactor-=changeSurfaceVariation;
         changeSurfaceVariation*=2;
@@ -192,6 +220,10 @@ public final class EnvironmentAppState extends BaseAppState {
             first.destroy();
             generateChunk();
             chunkList.removeFirst();
+        }
+        
+        for(EntityPickup pickup:pickupList) {
+            pickup.update(tpf);
         }
     }
 }

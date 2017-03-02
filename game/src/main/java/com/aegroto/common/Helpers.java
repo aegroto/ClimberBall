@@ -33,11 +33,17 @@ public final class Helpers {
     
     public static final float 
             INITIAL_SPEED=2f,
+            
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
             CHANGE_SURFACE_VARIATION_ENHANCING=.01f,
+            
+            INITIAL_PICKUP_SPAWNING_VARIATION=.00005f,   
+            PICKUP_SPAWNING_VARIATION_ENHANCING=.0001f,
+            
             INITIAL_PLAYER_SPEED=1.75f,
             MAX_BALL_SPEED=4.25f,
             MIN_BALL_SPEED=1.2f,
+            
             SPEED_DIM_FACTOR_MIN=.99f,
             SPEED_DIM_FACTOR_MED=.985f,
             SPEED_DIM_FACTOR_HIGH=.98f,

@@ -5,6 +5,7 @@
  */
 package com.aegroto.climberball.chunk;
 
+import com.aegroto.climberball.entity.pickup.EntityPickup;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Helpers;
 import static com.aegroto.common.Helpers.safeAttachChild;
