@@ -19,11 +19,16 @@ public final class Helpers {
     @Getter private static float 
             terrainChunkSize,
             terrainSlopes,
+            
             maxHeight,
             minHeight,
-            ballSize,
+            
+            ballSize,            
             ballMaxX,
             ballMinX,
+            
+            pickupSize,
+            
             epsilon,
             baseTextSize;
     
@@ -66,6 +71,8 @@ public final class Helpers {
         ballSize=Coordinate2D.yConvert(.08f);
         ballMaxX=Coordinate2D.xConvert(1f);
         ballMinX=-Coordinate2D.xConvert(.1f);
+        
+        pickupSize=Coordinate2D.yConvert(.1f);
         
         epsilon=(Coordinate2D.xConvert(.01f)+Coordinate2D.yConvert(.01f))/2;
         

@@ -28,9 +28,5 @@ public class EntityPickupSpeed extends EntityPickup {
     }
 
     @Override
-    public void update(float tpf) { }
-
-    @Override
-    public void destroy() { }
-    
+    public void destroy() { }    
 }
