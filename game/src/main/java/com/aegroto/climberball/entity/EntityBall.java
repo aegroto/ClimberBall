@@ -38,7 +38,7 @@ public class EntityBall extends Entity {
     @Getter @Setter protected byte currentForm;
     
     public EntityBall(Node rootNode,AssetManager assetManager,Skin skin) {
-        this.rootNode=rootNode;
+        this.terrainNode=rootNode;
         this.assetManager=assetManager;
         this.skin=skin;
         
@@ -46,8 +46,10 @@ public class EntityBall extends Entity {
         bodyNode=new Node();
         
         node.attachChild(bodyNode);
+        
+        this.size=new Vector2f(Helpers.getBallSize(),Helpers.getBallSize());
         //Core
-        geom=new Geometry("Ball Border Geometry",new Quad(Helpers.getBallSize(),Helpers.getBallSize()));     
+        geom=new Geometry("Ball Border Geometry",new Quad(size.x, size.y));     
         geom.setLocalTranslation(-Helpers.getBallSize()/2f,-Helpers.getBallSize()/2f,1f);
         
         material=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -59,9 +61,9 @@ public class EntityBall extends Entity {
         bodyNode.attachChild(geom);
         
         //Border
-        borderGeom=new Geometry("Ball Border Geometry",new Quad(Helpers.getBallSize()*1.3f,Helpers.getBallSize()*1.3f)); 
+        borderGeom=new Geometry("Ball Border Geometry",new Quad(size.x*1.3f, size.y*1.3f)); 
         borderGeom.setLocalTranslation(geom.getLocalTranslation().add(
-                new Vector3f(-Helpers.getBallSize()*.15f, -Helpers.getBallSize()*.15f, -geom.getLocalTranslation().z)));
+                new Vector3f(-size.x*.15f, -size.x*.15f, -geom.getLocalTranslation().z)));
         
         borderMaterial=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         borderMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);  

@@ -8,6 +8,7 @@ package com.aegroto.climberball.entity;
 import com.aegroto.climberball.skin.Skin;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -19,11 +20,15 @@ import lombok.Getter;
  */
 public abstract class Entity {
     protected AssetManager assetManager;
-    protected Node rootNode;
+    protected Node terrainNode;
     
     @Getter protected Node node;
     @Getter protected Geometry geom;
-    @Getter protected Material material;
+    @Getter protected Material material;    
+    
+    @Getter protected boolean destroyed=false;
+    
+    @Getter protected Vector2f size;
     
     protected Skin skin;
     

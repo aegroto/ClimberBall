@@ -179,7 +179,7 @@ public final class EnvironmentAppState extends BaseAppState {
         switch(nextPickupType) {
             case 0: break;
             case 1: 
-                pickupList.add(new EntityPickupSpeed(terrainNode,newChunk.getJointVector(),skin)); break;
+                pickupList.add(new EntityPickupSpeed(terrainNode,newChunk.getJointVector(),skin,getApplication().getAssetManager())); break;
         }
         
         pickupSpawningFactor-= pickupSpawningVariation;
@@ -222,8 +222,14 @@ public final class EnvironmentAppState extends BaseAppState {
             chunkList.removeFirst();
         }
         
-        for(EntityPickup pickup:pickupList) {
-            pickup.update(tpf);
+        synchronized(pickupList) {
+            for(EntityPickup pickup:pickupList) {
+                if(pickup.isDestroyed()) {
+                    System.out.println("Destroying pickup");
+                    //pickupList.remove(pickup);
+                } else 
+                    pickup.update(tpf);
+            }
         }
     }
 }

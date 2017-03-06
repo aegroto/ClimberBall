@@ -6,6 +6,7 @@
 package com.aegroto.climberball.entity.pickup;
 
 import com.aegroto.climberball.skin.Skin;
+import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -15,8 +16,8 @@ import com.jme3.scene.Node;
  */
 public class EntityPickupSpeed extends EntityPickup {
     
-    public EntityPickupSpeed(Node rootNode,Vector3f spawnPos, Skin skin) {
-        super(rootNode,spawnPos);
+    public EntityPickupSpeed(Node rootNode,Vector3f spawnPos, Skin skin, AssetManager assetManager) {
+        super(rootNode,spawnPos,assetManager);
         
         geom.setMaterial(skin.getSpeedPickupMaterial());
         
@@ -28,5 +29,8 @@ public class EntityPickupSpeed extends EntityPickup {
     }
 
     @Override
-    public void destroy() { }    
+    public void destroy() {
+        node.removeFromParent();
+        destroyed = true;
+    }    
 }

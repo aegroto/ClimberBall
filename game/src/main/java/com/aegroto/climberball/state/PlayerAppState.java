@@ -7,6 +7,7 @@ package com.aegroto.climberball.state;
 
 import com.aegroto.climberball.chunk.TerrainChunk;
 import com.aegroto.climberball.entity.EntityBall;
+import com.aegroto.climberball.entity.pickup.EntityPickup;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
@@ -17,11 +18,15 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Quad;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.concurrent.Callable;
@@ -36,39 +41,46 @@ import lombok.Setter;
  * @author lorenzo
  */
 public final class PlayerAppState extends BaseAppState implements ActionListener {
+
     private EntityBall ball;
     private final Skin skin;
     private final Node rootNode;
     protected LinkedList<TerrainChunk> chunkList;
+    @Getter protected ArrayList<EntityPickup> pickupList;
     protected ScheduledThreadPoolExecutor executor;
-    
+
     protected SoundAppState soundAppState;
-    
-    @Getter @Setter protected boolean gameLost=false;
-    
+
+    @Getter
+    @Setter
+    protected boolean gameLost = false;
+
     private Vector3f targetPos;
-    protected float xSpeed,ySpeed;
-    
-    @Getter protected int score;
-    
+    protected float xSpeed, ySpeed;
+
+    @Getter
+    protected int score;
+
     public PlayerAppState(Node rootNode,
             ScheduledThreadPoolExecutor executor,
             LinkedList<TerrainChunk> chunkList,
+            ArrayList<EntityPickup> pickupList,
             Skin skin) {
-        this.rootNode=rootNode;
-        this.skin=skin;
-        this.executor=executor;
-        this.chunkList=chunkList;
+        this.rootNode = rootNode;
+        this.skin = skin;
+        this.executor = executor;
+        this.chunkList = chunkList;
+        this.pickupList = pickupList;
     }
-    
+
     @Override
     protected void initialize(Application app) {
-        ball=new EntityBall(rootNode,app.getAssetManager(),skin);
-        
-        ball.setPos(new Vector2f(0f,chunkList.getFirst().getTargetVector().y));
+        ball = new EntityBall(rootNode, app.getAssetManager(), skin);
 
-        soundAppState=app.getStateManager().getState(SoundAppState.class);
-        
+        ball.setPos(new Vector2f(0f, chunkList.getFirst().getTargetVector().y));
+
+        soundAppState = app.getStateManager().getState(SoundAppState.class);
+
         app.getInputManager().addListener(this, "Touch");
         app.getInputManager().addMapping("Touch", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
     }
@@ -80,88 +92,125 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
 
     @Override
     protected void onEnable() {
-        xSpeed=Helpers.INITIAL_PLAYER_SPEED;
-        ySpeed=Helpers.INITIAL_PLAYER_SPEED*.5f;
-        
+        xSpeed = Helpers.INITIAL_PLAYER_SPEED;
+        ySpeed = Helpers.INITIAL_PLAYER_SPEED * .5f;
+
         executor.execute(asynchronousTick);
     }
 
     @Override
     protected void onDisable() {
-        
-    }  
-    
-    private boolean keepUpdating=true;
+
+    }
+
+    private boolean keepUpdating = true;
     private TerrainChunk lastChunk;
-    
-    private final Runnable asynchronousTick=new Runnable() {
+
+    private final Runnable asynchronousTick = new Runnable() {
         @Override
-        public void run() {          
+        public void run() {
             //try {  
-                if(!gameLost) {
-                    final TerrainChunk chunk=chunkList.get((int) (ball.getPos().x / Helpers.getTerrainChunkSize()) + 1);
+            if (!gameLost) {
+                final TerrainChunk chunk = chunkList.get((int) (ball.getPos().x / Helpers.getTerrainChunkSize()) + 1);
 
-                    /*chunkList.get(chunkIndex).getDebugMaterial().setColor("Color", ColorRGBA.Red);
+                /*chunkList.get(chunkIndex).getDebugMaterial().setColor("Color", ColorRGBA.Red);
                     if(chunkIndex>0) chunkList.get(chunkIndex-1).getDebugMaterial().setColor("Color", ColorRGBA.Black);*/
+                xSpeed = chunk.elaborateSpeedOnSurface(xSpeed, ball.getCurrentForm());
 
-                    xSpeed=chunk.elaborateSpeedOnSurface(xSpeed, ball.getCurrentForm());
+                targetPos = chunk.getTargetVector();
+                float xAdd = ball.getPos().x > Helpers.getBallMaxX() ? 0 : xSpeed,
+                        yAdd = FastMath.abs(ball.getPos().y - targetPos.y) > ySpeed
+                        ? ball.getPos().y > targetPos.y ? -ySpeed : ySpeed
+                        : 0;
 
-                    targetPos=chunk.getTargetVector();
-                    float xAdd=ball.getPos().x > Helpers.getBallMaxX() ? 0: xSpeed,
-                          yAdd=FastMath.abs(ball.getPos().y-targetPos.y) > ySpeed ?
-                                    ball.getPos().y > targetPos.y ? -ySpeed : ySpeed
-                                    : 0;
+                ball.safeSetPos(new Vector2f(
+                        ball.getPos().x + xAdd - Helpers.INITIAL_SPEED,
+                        ball.getPos().y + yAdd
+                ));
 
-                    ball.safeSetPos(new Vector2f(
-                            ball.getPos().x+xAdd-Helpers.INITIAL_SPEED,
-                            ball.getPos().y+yAdd
-                    ));
-
-                    if(ball.getPos().x <= Helpers.getBallMinX()) gameLost=true;
-
-                    if(chunk != lastChunk) {
-                        score++;
-                        lastChunk=chunk;
-                        getApplication().enqueue(new Callable<Object>() {
-                            public Object call() {
-                                ball.updateParticles(chunk, chunk.getSurfaceType());
-                                return null;
-                            }
-                        });
-                        //System.out.println("Score: "+score);
-                    }               
+                if (ball.getPos().x <= Helpers.getBallMinX()) {
+                    gameLost = true;
                 }
-                
-                if(keepUpdating) executor.schedule(this, Helpers.UPDATE_TIME, TimeUnit.MILLISECONDS);
+
+                if (chunk != lastChunk) {
+                    score++;
+                    lastChunk = chunk;
+                    getApplication().enqueue(new Callable<Object>() {
+                        public Object call() {
+                            ball.updateParticles(chunk, chunk.getSurfaceType());
+                            return null;
+                        }
+                    });
+                    //System.out.println("Score: "+score);
+                }
+            }
+
+            if (keepUpdating) {
+                executor.schedule(this, Helpers.UPDATE_TIME, TimeUnit.MILLISECONDS);
+            }
             /*} catch(Exception e) {
                 e.printStackTrace();
             }*/
-        }          
+        }
     };
-    
+
     @Override
     public void update(float tpf) {
-        ball.setRotationSpeed(xSpeed*.075f);
+        ball.setRotationSpeed(xSpeed * .075f);
         ball.update(tpf);
     }
-    
+
     public void useSecondChance() {
-        gameLost=false;
-        ball.safeSetPos(new Vector2f(0f,chunkList.getFirst().getTargetVector().y));
-        while(ball.getCurrentForm()!=0)
+        gameLost = false;
+        ball.safeSetPos(new Vector2f(0f, chunkList.getFirst().getTargetVector().y));
+        while (ball.getCurrentForm() != 0) {
             ball.switchForm();
-        xSpeed=Helpers.INITIAL_PLAYER_SPEED * 15f;
+        }
+        xSpeed = Helpers.INITIAL_PLAYER_SPEED * 15f;
     }
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
-        switch(name) {
+        switch (name) {
             case "Touch":
-                if(!isPressed && !gameLost) {
-                    ball.switchForm();
+                if (!isPressed && !gameLost) {
+                    boolean canSwitchForm = true;
+                    for(EntityPickup pickup:pickupList) {
+                        Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
+                                 /*pickupMin = pickup.getPickupZoneMin(),
+                                 pickupMax = pickup.getPickupZoneMax();
+                        Geometry testQuadMin=new Geometry("Test min", new Quad(20, 20));
+                        Material minMat = new Material(getApplication().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md"); 
+                        minMat.setColor("Color", ColorRGBA.Green); 
+                        testQuadMin.setMaterial(minMat);
+                        rootNode.attachChild(testQuadMin);
+                        testQuadMin.setLocalTranslation(pickupMin.x, pickupMin.y, 10f);
+
+                        Geometry testQuadMax=new Geometry("Test max", new Quad(10, 10));
+                        Material maxMat = new Material(getApplication().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md"); 
+                        maxMat.setColor("Color", ColorRGBA.Red); 
+                        testQuadMax.setMaterial(maxMat);
+                        rootNode.attachChild(testQuadMax);
+                        testQuadMax.setLocalTranslation(pickupMax.x, pickupMax.y, 10f);*/
+                        
+                        //System.out.println("Checking pickup:" + id + " " + pickupMin + " " + pickupMax);
+                        if(Helpers.pointInArea(mousePos,
+                                               pickup.getPickupZoneMin(),
+                                               pickup.getPickupZoneMax())) {
+                            System.out.println("Picked up pickup");
+                            pickup.onPick();
+                            pickup.destroy();
+                            canSwitchForm = false;
+                            break;
+                        } //else System.out.println("Dist:" +pickup.getPickupZoneMin().distance(mousePos));
+                    }
                     
-                    soundAppState.stopSound("effect_switch");
-                    soundAppState.playSound("effect_switch");
+                    if(canSwitchForm) {
+                        ball.switchForm();
+
+                        soundAppState.stopSound("effect_switch");
+                        soundAppState.playSound("effect_switch");
+                    }
                 }
                 break;
         }

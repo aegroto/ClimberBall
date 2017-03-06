@@ -8,14 +8,17 @@ package com.aegroto.climberball.entity.pickup;
 import com.aegroto.climberball.entity.Entity;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
+import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 
 /**
@@ -28,32 +31,75 @@ public abstract class EntityPickup extends Entity {
     
     protected final float[] rotation = {0f, 0f, 0f};
     
-    public EntityPickup(Node rootNode,Vector3f spawnPos) {
+    public EntityPickup(Node terrainNode,Vector3f spawnPos,AssetManager assetManager) {
         node=new Node();
-        this.rootNode=rootNode;
+        this.terrainNode=terrainNode;
         
-        this.rootNode.attachChild(node);
+        this.terrainNode.attachChild(node);
         
         this.floatingDirection=new Vector3f(
                 Coordinate2D.xConvert(FastMath.nextRandomInt(-1, 1) / 5000f), 
                 Coordinate2D.yConvert(FastMath.nextRandomInt(-1, 1) / 5000f),
                 0f);
         
-        this.rotationSpeed=FastMath.QUARTER_PI/64f * FastMath.nextRandomFloat() * FastMath.nextRandomInt(-1, 1);
+        this.rotationSpeed=FastMath.QUARTER_PI/256f * FastMath.nextRandomFloat() * FastMath.nextRandomInt(-1, 1);
         
-        geom=new Geometry("Pickup Geometry",new Quad(Helpers.getPickupSize(),Helpers.getPickupSize()));     
+        this.size = new Vector2f(Helpers.getPickupSize(),Helpers.getPickupSize());
+        geom=new Geometry("Pickup Geometry",new Quad(size.x, size.y));     
         geom.setLocalTranslation(spawnPos.add(0,Coordinate2D.yConvert(.2f + FastMath.nextRandomInt(0, 30) / 100f),0f));
+
+        /*testQuadMin=new Geometry("Test min", new Quad(20, 20));
+        Material minMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
+        minMat.setColor("Diffuse", ColorRGBA.Green); 
+        minMat.setBoolean("UseMaterialColors", true);
+        testQuadMin.setMaterial(minMat);
+        //rootNode.attachChild(testQuadMin);
+        testQuadMin.setLocalTranslation(getPickupZoneMin().x, getPickupZoneMin().y, 10f);
+        
+        testQuadMax=new Geometry("Test max", new Quad(10, 10));
+        Material maxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
+        maxMat.setColor("Diffuse", ColorRGBA.Red); 
+        maxMat.setBoolean("UseMaterialColors", true);
+        testQuadMax.setMaterial(maxMat);
+        //rootNode.attachChild(testQuadMax);
+        testQuadMax.setLocalTranslation(getPickupZoneMax().x, getPickupZoneMax().y, 10f);*/
     }
 
+    //private Geometry testQuadMin,testQuadMax;
+    
     public abstract void onPick();
     
     @Override
     public void update(float tpf) {
         rotation[2]-=rotationSpeed;
         
-        geom.setLocalRotation(new Quaternion().fromAngles(rotation));
-        geom.setLocalTranslation(geom.getLocalTranslation().add(floatingDirection));
+        //geom.setLocalRotation(new Quaternion().fromAngles(rotation));
+        //geom.setLocalTranslation(geom.getLocalTranslation().add(floatingDirection));
         
+        //testQuadMin.setLocalTranslation(getPickupZoneMin().x, getPickupZoneMin().y, 10f);
+        //testQuadMax.setLocalTranslation(getPickupZoneMax().x, getPickupZoneMax().y, 10f);
         if(rotation[2] <= -FastMath.TWO_PI) rotation[2]=0f;
+    }
+    
+    public Vector2f getPickupZoneMin() {
+        Vector3f zoneWithRot=geom.getLocalRotation().mult(new Vector3f(
+                geom.getLocalTranslation().x + terrainNode.getLocalTranslation().x,
+                geom.getLocalTranslation().y + terrainNode.getLocalTranslation().y,
+                0f
+        ));
+         /*System.out.println("Terrain translation:" + terrainNode.getLocalTranslation() +
+                 "Geom translation:" + geom.getLocalTranslation() +
+                 "Zone pos:" + zoneWithRot);*/
+        
+        return new Vector2f(zoneWithRot.x, zoneWithRot.y);
+    }
+    
+    public Vector2f getPickupZoneMax() {
+        Vector3f zoneWithRot=geom.getLocalRotation().mult(new Vector3f(
+                getPickupZoneMin().x + size.x,
+                getPickupZoneMin().y + size.y,
+                0f
+        ));
+        return new Vector2f(zoneWithRot.x, zoneWithRot.y);
     }
 }

@@ -135,7 +135,11 @@ public class Main extends SimpleApplication {
             
             initEnvironmentAppState=false;
         } else if(initPlayerAppState) {
-            playerAppState=new PlayerAppState(guiNode,executor,environmentAppState.getChunkList(),skinAppState.getCurrentSkin());
+            playerAppState=new PlayerAppState(guiNode,
+                                              executor,
+                                              environmentAppState.getChunkList(),
+                                              environmentAppState.getPickupList(),
+                                              skinAppState.getCurrentSkin());
             stateManager.attach(playerAppState);
             
             initPlayerAppState=false;
