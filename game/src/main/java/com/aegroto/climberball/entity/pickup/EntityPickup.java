@@ -32,6 +32,8 @@ public abstract class EntityPickup extends Entity {
     
     protected final float[] rotation = {0f, 0f, 0f};
     
+    protected final float PICKUP_ZONE_EXTENSION_FACTOR = 1.02f;
+    
     public EntityPickup(Node terrainNode,Vector3f spawnPos,AssetManager assetManager) {
         node=new Node();
         
@@ -51,11 +53,26 @@ public abstract class EntityPickup extends Entity {
         geom=new Geometry("Pickup Geometry",new Quad(size.x, size.y));
         
         node.setLocalTranslation(spawnPos.add(0,Coordinate2D.yConvert(.2f + FastMath.nextRandomInt(0, 30) / 100f),0f));
+        
+        /*testQuadMin=new Geometry("Test min", new Quad(20, 20));
+        Material minMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); 
+        minMat.setColor("Color", ColorRGBA.Green); 
+        testQuadMin.setMaterial(minMat);
+        terrainNode.getParent().attachChild(testQuadMin);
+        testQuadMin.setLocalTranslation(getPickupZoneMin().x, getPickupZoneMin().y, 10f);
+        
+        testQuadMax=new Geometry("Test max", new Quad(10, 10));
+        Material maxMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); 
+        maxMat.setColor("Color", ColorRGBA.Red); 
+        testQuadMax.setMaterial(maxMat);
+        terrainNode.getParent().attachChild(testQuadMax);
+        testQuadMax.setLocalTranslation(getPickupZoneMax().x, getPickupZoneMax().y, 10f);*/
     }
-
-    //private Geometry testQuadMin,testQuadMax;
+    
+    //protected Geometry testQuadMin,testQuadMax;
     
     public abstract void onPick(EntityBall ball);
+    public abstract String getName();
     
     public boolean checkForBarrage(float xBarrage) {
         if(node.getLocalTranslation().x < xBarrage) {    
@@ -81,7 +98,7 @@ public abstract class EntityPickup extends Entity {
                 node.getLocalTranslation().x + terrainNode.getLocalTranslation().x,
                 node.getLocalTranslation().y + terrainNode.getLocalTranslation().y,
                 0f
-        ));
+        )).divide(PICKUP_ZONE_EXTENSION_FACTOR);
         
         return new Vector2f(zoneWithRot.x, zoneWithRot.y);
     }
@@ -91,7 +108,7 @@ public abstract class EntityPickup extends Entity {
                 getPickupZoneMin().x + size.x,
                 getPickupZoneMin().y + size.y,
                 0f
-        ));
+        )).mult(PICKUP_ZONE_EXTENSION_FACTOR * 2f);
         return new Vector2f(zoneWithRot.x, zoneWithRot.y);
     }
 }

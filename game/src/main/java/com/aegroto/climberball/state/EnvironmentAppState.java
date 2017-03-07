@@ -199,7 +199,7 @@ public final class EnvironmentAppState extends BaseAppState {
             getApplication().enqueue(new Callable<Object>() {
                 @Override
                 public Object call() {
-                    terrainNode.setLocalTranslation(terrainNode.getLocalTranslation().x-speed,0,0);
+                    terrainNode.setLocalTranslation(terrainNode.getLocalTranslation().x-speed, 0f, 5f);
                     return null;
                 }
             });

@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
  * @author lorenzo
  */
 public class EntityPickupSpeed extends EntityPickup {
+    protected static float SPEED_BOOST = 2.0f;
     
     public EntityPickupSpeed(Node rootNode,Vector3f spawnPos, Skin skin, AssetManager assetManager) {
         super(rootNode,spawnPos,assetManager);
@@ -27,7 +28,7 @@ public class EntityPickupSpeed extends EntityPickup {
 
     @Override
     public void onPick(EntityBall ball) { 
-        ball.setXSpeed(ball.getXSpeed() * 2f);
+        ball.setXSpeed(ball.getXSpeed() + SPEED_BOOST);
     }
 
     @Override
@@ -35,4 +36,9 @@ public class EntityPickupSpeed extends EntityPickup {
         node.removeFromParent();
         destroyed = true;
     }    
+
+    @Override
+    public String getName() {
+        return "Speed boost";
+    }
 }

@@ -42,11 +42,11 @@ public final class Helpers {
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
             CHANGE_SURFACE_VARIATION_ENHANCING=.01f,
             
-            INITIAL_PICKUP_SPAWNING_VARIATION=.00005f,   
-            PICKUP_SPAWNING_VARIATION_ENHANCING=.0001f,
+            INITIAL_PICKUP_SPAWNING_VARIATION=.000005f,   
+            PICKUP_SPAWNING_VARIATION_ENHANCING=.00001f,
             
             INITIAL_PLAYER_SPEED=1.75f,
-            MAX_BALL_SPEED=4.25f,
+            MAX_BALL_SPEED=10.25f,
             MIN_BALL_SPEED=1.2f,
             
             SPEED_DIM_FACTOR_MIN = .99f,

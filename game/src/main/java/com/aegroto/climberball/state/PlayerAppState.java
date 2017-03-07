@@ -8,9 +8,11 @@ package com.aegroto.climberball.state;
 import com.aegroto.climberball.chunk.TerrainChunk;
 import com.aegroto.climberball.entity.EntityBall;
 import com.aegroto.climberball.entity.pickup.EntityPickup;
+import com.aegroto.climberball.menu.InGameMenu;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
+import com.aegroto.gui.states.GuiAppState;
 import com.jme3.app.Application;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.font.BitmapText;
@@ -50,6 +52,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     protected ScheduledThreadPoolExecutor executor;
 
     protected SoundAppState soundAppState;
+    protected GuiAppState guiAppState;
 
     @Getter
     @Setter
@@ -65,12 +68,14 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
             ScheduledThreadPoolExecutor executor,
             LinkedList<TerrainChunk> chunkList,
             ArrayList<EntityPickup> pickupList,
+            GuiAppState guiAppState,
             Skin skin) {
         this.rootNode = rootNode;
         this.skin = skin;
         this.executor = executor;
         this.chunkList = chunkList;
         this.pickupList = pickupList;
+        this.guiAppState = guiAppState;
     }
 
     @Override
@@ -166,7 +171,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         while (ball.getCurrentForm() != 0) {
             ball.switchForm();
         }
-        ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED * 15f);
+        ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED * 7.5f);
     }
 
     @Override
@@ -177,15 +182,14 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                     boolean canSwitchForm = true;
                     for(EntityPickup pickup:pickupList) {
                         Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
-                        
-                        System.out.println(pickup.getPickupZoneMin());
-                        
                         if(Helpers.pointInArea(mousePos,
                                                pickup.getPickupZoneMin(),
                                                pickup.getPickupZoneMax())) {
-                            System.out.println("Picked up pickup");
+                            guiAppState.getMenu(InGameMenu.class)
+                                    .setInfoText("Whoa! You've got a " + pickup.getName() + " !");
                             pickup.onPick(ball);
                             pickup.destroy();
+                            
                             canSwitchForm = false;
                             break;
                         }

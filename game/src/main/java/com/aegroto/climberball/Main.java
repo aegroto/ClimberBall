@@ -139,6 +139,7 @@ public class Main extends SimpleApplication {
                                               executor,
                                               environmentAppState.getChunkList(),
                                               environmentAppState.getPickupList(),
+                                              guiAppState,
                                               skinAppState.getCurrentSkin());
             stateManager.attach(playerAppState);
             

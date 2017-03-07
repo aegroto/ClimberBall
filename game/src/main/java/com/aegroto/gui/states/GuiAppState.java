@@ -218,7 +218,18 @@ public class GuiAppState extends BaseAppState implements ActionListener,AnalogLi
         }
     }
     
-    public boolean hasMenu(Menu menu) { return menuList.contains(menu); }
+    public <T extends Menu> T getMenu(Class<T> menuClass) {
+        for(Menu menu:menuList) {
+            if(menu.getClass().equals(menuClass)) {
+                return (T) menu;
+            }
+        }
+        return null;
+    }
+    
+    public boolean hasMenu(Menu menu) { 
+        return menuList.contains(menu); 
+    }
     
     protected void enableMenus() {
         for(Menu menu:menuList) {

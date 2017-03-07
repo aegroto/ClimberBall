@@ -51,8 +51,8 @@ public class EntityBall extends Entity {
         
         this.size=new Vector2f(Helpers.getBallSize(),Helpers.getBallSize());
         //Core
-        geom=new Geometry("Ball Border Geometry",new Quad(size.x, size.y));     
-        geom.setLocalTranslation(-Helpers.getBallSize()/2f,-Helpers.getBallSize()/2f,1f);
+        geom=new Geometry("Ball Geometry",new Quad(size.x, size.y));     
+        geom.setLocalTranslation(-Helpers.getBallSize()/2f,-Helpers.getBallSize()/2f,2f);
         
         material=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); 
@@ -65,7 +65,7 @@ public class EntityBall extends Entity {
         //Border
         borderGeom=new Geometry("Ball Border Geometry",new Quad(size.x*1.3f, size.y*1.3f)); 
         borderGeom.setLocalTranslation(geom.getLocalTranslation().add(
-                new Vector3f(-size.x*.15f, -size.x*.15f, -geom.getLocalTranslation().z)));
+                new Vector3f(-size.x*.15f, -size.x*.15f, -1f)));
         
         borderMaterial=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         borderMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);  
