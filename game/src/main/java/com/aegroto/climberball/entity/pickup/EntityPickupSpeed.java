@@ -10,6 +10,7 @@ import com.aegroto.climberball.skin.Skin;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  *

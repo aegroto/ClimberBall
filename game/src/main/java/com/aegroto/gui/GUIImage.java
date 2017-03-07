@@ -32,7 +32,8 @@ public class GUIImage extends GUINode {
         img.setImage(aM,pic,false);
         img.setWidth(scale.x);
         img.setHeight(scale.y);       
-        img.setLocalTranslation(pos.x, pos.y, 0);
+        
+        img.setLocalTranslation(pos.x, pos.y, getGlobalZOffset());
         
         img.getMaterial().getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
         
@@ -44,7 +45,7 @@ public class GUIImage extends GUINode {
     public void mirrorVertically() {
         img.setLocalRotation(new Quaternion().fromAngles(0f,0f,FastMath.PI)); 
         img.setLocalTranslation(img.getLocalTranslation().add(
-                getScale().x,getScale().y,0f));        
+                getScale().x, getScale().y, zOffset));        
     }
     
     @Override
@@ -60,7 +61,10 @@ public class GUIImage extends GUINode {
     }
     
     public void setZOffset(int zOffset) {
-        img.setLocalTranslation(getGlobalPos().x, getGlobalPos().y, zOffset);
+        this.zOffset = zOffset;
+        //float parentZOffset = this.getParentNode() == null ? 0 : this.getParentNode().getZOffset();
+        
+        img.setLocalTranslation(getGlobalPos().x, getGlobalPos().y, getGlobalZOffset());
     }
     
     public float getZOffset() {

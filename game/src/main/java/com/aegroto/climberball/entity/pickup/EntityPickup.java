@@ -21,6 +21,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  *
@@ -35,10 +36,9 @@ public abstract class EntityPickup extends Entity {
     protected final float PICKUP_ZONE_EXTENSION_FACTOR = 1.02f;
     
     public EntityPickup(Node terrainNode,Vector3f spawnPos,AssetManager assetManager) {
-        node=new Node();
+        this.node=new Node();
         
-        this.terrainNode=terrainNode;
-        
+        this.terrainNode=terrainNode;        
         this.terrainNode.attachChild(node);
         
         this.floatingDirection=new Vector3f(

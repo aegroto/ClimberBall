@@ -158,6 +158,10 @@ public abstract class GUIButton extends GUIInteractiveElement {
     
     @Override
     public String toString() {
-        return "GUIButton at index "+interactiveGUIsList.indexOf(this);
+        try {
+            return "GUIButton at index "+interactiveGUIsList.indexOf(this);
+        } catch(NullPointerException e) {
+            return "GUIButton (no index)";
+        }
     }
 }

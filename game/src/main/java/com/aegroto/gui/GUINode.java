@@ -30,6 +30,8 @@ public class GUINode<E extends GUIElement> extends GUIElement{
     public void attach(E element) {
         elements.add(element);
         element.setParentNode(this);
+        
+        //System.out.println("Attaching " + element + " to " + this + " " + element.getParentNode().getGlobalZOffset() + " " + element.getGlobalZOffset());
     }
     
     public void detach(E element) {

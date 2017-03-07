@@ -27,16 +27,21 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import com.aegroto.gui.menu.Menu;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  *
  * @author lorenzo
  */
-public class GuiAppState extends BaseAppState implements ActionListener,AnalogListener{
+public class GuiAppState extends BaseAppState implements ActionListener,AnalogListener {
+    public static final float GUI_Z_OFFSET = 50f;
+    
+    @Getter protected Node guiConjunctionNode;
+    
     protected InputManager inputManager;    
     protected AppStateManager stateManager;
         
-    @Getter protected Node guiNode;
+    //@Getter protected Node guiNode;
     @Getter protected BitmapFont guiFont;
     @Getter protected AssetManager assetManager;    
     
@@ -45,13 +50,19 @@ public class GuiAppState extends BaseAppState implements ActionListener,AnalogLi
     
     protected Runnable onSoftKeyboardShownCallback,onSoftKeyboardHiddenCallback;
     
+    @Getter protected ScheduledThreadPoolExecutor executor;
+    
     @Getter protected GUITextBar activeTextBar;
     //protected GUIKeyboard keyboard;
     
  
-    public GuiAppState(BitmapFont guiFont,Node guiNode) {
+    public GuiAppState(BitmapFont guiFont,Node guiNode, ScheduledThreadPoolExecutor executor) {
         this.guiFont=guiFont;
-        this.guiNode=guiNode;
+        this.executor=executor;        
+        this.guiConjunctionNode = new Node();
+        
+        guiNode.attachChild(guiConjunctionNode);
+        guiConjunctionNode.setLocalTranslation(0f, 0f, GuiAppState.GUI_Z_OFFSET);
     }
     
     @Override

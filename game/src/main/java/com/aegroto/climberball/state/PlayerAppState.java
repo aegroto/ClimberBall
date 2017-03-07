@@ -186,7 +186,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                                                pickup.getPickupZoneMin(),
                                                pickup.getPickupZoneMax())) {
                             guiAppState.getMenu(InGameMenu.class)
-                                    .setInfoText("Whoa! You've got a " + pickup.getName() + " !");
+                                    .showInfoText("Whoa! You've got a " + pickup.getName() + " !");
                             pickup.onPick(ball);
                             pickup.destroy();
                             

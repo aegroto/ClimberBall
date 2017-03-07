@@ -48,7 +48,7 @@ public class GameOverMenu extends Menu {
                 "","alpha_background.png",
                 guiAppState.getGuiFont(),
                 guiAppState.getAssetManager(), 
-                guiAppState.getGuiNode(),
+                guiAppState.getGuiConjunctionNode(),
                 guiAppState.getInteractiveGUIsList()
         ) {
             @Override
@@ -65,7 +65,7 @@ public class GameOverMenu extends Menu {
                 "Second Chance", .4f,
                 guiAppState.getGuiFont(),
                 guiAppState.getAssetManager(), 
-                guiAppState.getGuiNode(),
+                guiAppState.getGuiConjunctionNode(),
                 guiAppState.getInteractiveGUIsList()
         ) {
             @Override
@@ -80,7 +80,7 @@ public class GameOverMenu extends Menu {
                 new Coordinate2D(.5f,.75f).toVector(),
                 "Your final score is "+this.score, .5f, 
                 guiAppState.getGuiFont(), 
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         scoreText.centerX();

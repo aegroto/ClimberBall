@@ -51,7 +51,7 @@ public class StartMenu extends Menu {
                 "","alpha_background.png",
                 guiAppState.getGuiFont(),
                 guiAppState.getAssetManager(), 
-                guiAppState.getGuiNode(),
+                guiAppState.getGuiConjunctionNode(),
                 guiAppState.getInteractiveGUIsList()
         ) {
             @Override
@@ -64,7 +64,7 @@ public class StartMenu extends Menu {
                 new Coordinate2D(.5f, .95f).toVector(),
                 "CLIMBERBALL", .5f, 
                 guiAppState.getGuiFont(), 
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         titleText.centerX();
@@ -76,7 +76,7 @@ public class StartMenu extends Menu {
                 + "the ball falls into the darkness (game over).",
                 .2f, Coordinate2D.yConvert(.035f),
                 guiAppState.getGuiFont(), 
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         Vector2f imageScale=new Coordinate2D(.06f,.1f).toVector();
@@ -86,7 +86,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/ball/core_plain.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(ballRockImage=new GUIImage(
@@ -94,7 +94,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/ball/core_rock.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(ballSandImage=new GUIImage(
@@ -102,7 +102,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/ball/core_sand.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(ballGrassImage=new GUIImage(
@@ -110,7 +110,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/ball/core_grass.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(terrainPlainImage=new GUIImage(
@@ -118,7 +118,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/plain.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(terrainRockImage=new GUIImage(
@@ -126,7 +126,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/rock.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(terrainSandImage=new GUIImage(
@@ -134,7 +134,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/sand.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         attachElement(terrainGrassImage=new GUIImage(
@@ -142,7 +142,7 @@ public class StartMenu extends Menu {
                 imageScale,
                 "base/grass.png",
                 guiAppState.getAssetManager(),
-                guiAppState.getGuiNode()
+                guiAppState.getGuiConjunctionNode()
         ));
         
         for(int i=0;i<arrow.length;i++) {
@@ -151,7 +151,7 @@ public class StartMenu extends Menu {
                     new Coordinate2D(.08f,.08f).toVector(),
                     "help_arrow.png",
                     guiAppState.getAssetManager(),
-                    guiAppState.getGuiNode()
+                    guiAppState.getGuiConjunctionNode()
             ));
         }
         explainationText.centerX();

@@ -16,6 +16,7 @@ import com.aegroto.gui.states.GuiAppState;
  * @author lorenzo
  */
 public abstract class Menu {
+    
     protected GuiAppState guiAppState;
     @Getter protected GUINode menuNode;
     

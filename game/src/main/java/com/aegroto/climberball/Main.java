@@ -48,7 +48,6 @@ public class Main extends SimpleApplication {
     private static GuiAppState guiAppState;
     private static SoundAppState soundAppState;
     
-    
     //MENUS
     private static InGameMenu inGameMenu;
     private static StartMenu startMenu;
@@ -144,9 +143,9 @@ public class Main extends SimpleApplication {
             stateManager.attach(playerAppState);
             
             initPlayerAppState=false;
-        } else if(initGuiAppState) {
-            guiAppState=new GuiAppState(skinAppState.getCurrentSkin().getGuiFont(),guiNode);
-            stateManager.attach(guiAppState);         
+        } else if(initGuiAppState) {                    
+            guiAppState=new GuiAppState(skinAppState.getCurrentSkin().getGuiFont(), guiNode, executor);
+            stateManager.attach(guiAppState);          
             
             initGuiAppState=false;
         } else if(resetGame) {
@@ -206,5 +205,6 @@ public class Main extends SimpleApplication {
     public void destroy() {
         super.destroy();
         executor.shutdownNow();
+        System.gc();
     }
 }
