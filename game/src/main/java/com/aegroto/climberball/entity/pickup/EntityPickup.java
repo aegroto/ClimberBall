@@ -6,6 +6,7 @@
 package com.aegroto.climberball.entity.pickup;
 
 import com.aegroto.climberball.entity.Entity;
+import com.aegroto.climberball.entity.EntityBall;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
 import com.jme3.asset.AssetManager;
@@ -33,6 +34,7 @@ public abstract class EntityPickup extends Entity {
     
     public EntityPickup(Node terrainNode,Vector3f spawnPos,AssetManager assetManager) {
         node=new Node();
+        
         this.terrainNode=terrainNode;
         
         this.terrainNode.attachChild(node);
@@ -45,29 +47,24 @@ public abstract class EntityPickup extends Entity {
         this.rotationSpeed=FastMath.QUARTER_PI/256f * FastMath.nextRandomFloat() * FastMath.nextRandomInt(-1, 1);
         
         this.size = new Vector2f(Helpers.getPickupSize(),Helpers.getPickupSize());
-        geom=new Geometry("Pickup Geometry",new Quad(size.x, size.y));     
-        geom.setLocalTranslation(spawnPos.add(0,Coordinate2D.yConvert(.2f + FastMath.nextRandomInt(0, 30) / 100f),0f));
-
-        /*testQuadMin=new Geometry("Test min", new Quad(20, 20));
-        Material minMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-        minMat.setColor("Diffuse", ColorRGBA.Green); 
-        minMat.setBoolean("UseMaterialColors", true);
-        testQuadMin.setMaterial(minMat);
-        //rootNode.attachChild(testQuadMin);
-        testQuadMin.setLocalTranslation(getPickupZoneMin().x, getPickupZoneMin().y, 10f);
         
-        testQuadMax=new Geometry("Test max", new Quad(10, 10));
-        Material maxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-        maxMat.setColor("Diffuse", ColorRGBA.Red); 
-        maxMat.setBoolean("UseMaterialColors", true);
-        testQuadMax.setMaterial(maxMat);
-        //rootNode.attachChild(testQuadMax);
-        testQuadMax.setLocalTranslation(getPickupZoneMax().x, getPickupZoneMax().y, 10f);*/
+        geom=new Geometry("Pickup Geometry",new Quad(size.x, size.y));
+        
+        node.setLocalTranslation(spawnPos.add(0,Coordinate2D.yConvert(.2f + FastMath.nextRandomInt(0, 30) / 100f),0f));
     }
 
     //private Geometry testQuadMin,testQuadMax;
     
-    public abstract void onPick();
+    public abstract void onPick(EntityBall ball);
+    
+    public boolean checkForBarrage(float xBarrage) {
+        if(node.getLocalTranslation().x < xBarrage) {    
+            destroyed = true;
+            return true;
+        }
+        
+        return false;
+    }
     
     @Override
     public void update(float tpf) {
@@ -76,20 +73,15 @@ public abstract class EntityPickup extends Entity {
         //geom.setLocalRotation(new Quaternion().fromAngles(rotation));
         //geom.setLocalTranslation(geom.getLocalTranslation().add(floatingDirection));
         
-        //testQuadMin.setLocalTranslation(getPickupZoneMin().x, getPickupZoneMin().y, 10f);
-        //testQuadMax.setLocalTranslation(getPickupZoneMax().x, getPickupZoneMax().y, 10f);
         if(rotation[2] <= -FastMath.TWO_PI) rotation[2]=0f;
     }
     
     public Vector2f getPickupZoneMin() {
         Vector3f zoneWithRot=geom.getLocalRotation().mult(new Vector3f(
-                geom.getLocalTranslation().x + terrainNode.getLocalTranslation().x,
-                geom.getLocalTranslation().y + terrainNode.getLocalTranslation().y,
+                node.getLocalTranslation().x + terrainNode.getLocalTranslation().x,
+                node.getLocalTranslation().y + terrainNode.getLocalTranslation().y,
                 0f
         ));
-         /*System.out.println("Terrain translation:" + terrainNode.getLocalTranslation() +
-                 "Geom translation:" + geom.getLocalTranslation() +
-                 "Zone pos:" + zoneWithRot);*/
         
         return new Vector2f(zoneWithRot.x, zoneWithRot.y);
     }

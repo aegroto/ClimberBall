@@ -37,6 +37,8 @@ public class EntityBall extends Entity {
     protected Node bodyNode;
     @Getter @Setter protected byte currentForm;
     
+    @Getter @Setter protected float xSpeed, ySpeed;
+    
     public EntityBall(Node rootNode,AssetManager assetManager,Skin skin) {
         this.terrainNode=rootNode;
         this.assetManager=assetManager;

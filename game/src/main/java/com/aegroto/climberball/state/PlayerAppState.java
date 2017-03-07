@@ -56,7 +56,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     protected boolean gameLost = false;
 
     private Vector3f targetPos;
-    protected float xSpeed, ySpeed;
+    //protected float xSpeed, ySpeed;
 
     @Getter
     protected int score;
@@ -92,8 +92,8 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
 
     @Override
     protected void onEnable() {
-        xSpeed = Helpers.INITIAL_PLAYER_SPEED;
-        ySpeed = Helpers.INITIAL_PLAYER_SPEED * .5f;
+        ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED);
+        ball.setYSpeed(Helpers.INITIAL_PLAYER_SPEED * .5f);
 
         executor.execute(asynchronousTick);
     }
@@ -115,12 +115,12 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
 
                 /*chunkList.get(chunkIndex).getDebugMaterial().setColor("Color", ColorRGBA.Red);
                     if(chunkIndex>0) chunkList.get(chunkIndex-1).getDebugMaterial().setColor("Color", ColorRGBA.Black);*/
-                xSpeed = chunk.elaborateSpeedOnSurface(xSpeed, ball.getCurrentForm());
+                ball.setXSpeed(chunk.elaborateSpeedOnSurface(ball.getXSpeed(), ball.getCurrentForm()));
 
                 targetPos = chunk.getTargetVector();
-                float xAdd = ball.getPos().x > Helpers.getBallMaxX() ? 0 : xSpeed,
-                        yAdd = FastMath.abs(ball.getPos().y - targetPos.y) > ySpeed
-                        ? ball.getPos().y > targetPos.y ? -ySpeed : ySpeed
+                float xAdd = ball.getPos().x > Helpers.getBallMaxX() ? 0 : ball.getXSpeed(),
+                        yAdd = FastMath.abs(ball.getPos().y - targetPos.y) > ball.getYSpeed()
+                        ? ball.getPos().y > targetPos.y ? -ball.getYSpeed() : ball.getYSpeed()
                         : 0;
 
                 ball.safeSetPos(new Vector2f(
@@ -156,7 +156,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
 
     @Override
     public void update(float tpf) {
-        ball.setRotationSpeed(xSpeed * .075f);
+        ball.setRotationSpeed(ball.getXSpeed() * .075f);
         ball.update(tpf);
     }
 
@@ -166,7 +166,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         while (ball.getCurrentForm() != 0) {
             ball.switchForm();
         }
-        xSpeed = Helpers.INITIAL_PLAYER_SPEED * 15f;
+        ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED * 15f);
     }
 
     @Override
@@ -177,32 +177,18 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                     boolean canSwitchForm = true;
                     for(EntityPickup pickup:pickupList) {
                         Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
-                                 /*pickupMin = pickup.getPickupZoneMin(),
-                                 pickupMax = pickup.getPickupZoneMax();
-                        Geometry testQuadMin=new Geometry("Test min", new Quad(20, 20));
-                        Material minMat = new Material(getApplication().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md"); 
-                        minMat.setColor("Color", ColorRGBA.Green); 
-                        testQuadMin.setMaterial(minMat);
-                        rootNode.attachChild(testQuadMin);
-                        testQuadMin.setLocalTranslation(pickupMin.x, pickupMin.y, 10f);
-
-                        Geometry testQuadMax=new Geometry("Test max", new Quad(10, 10));
-                        Material maxMat = new Material(getApplication().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md"); 
-                        maxMat.setColor("Color", ColorRGBA.Red); 
-                        testQuadMax.setMaterial(maxMat);
-                        rootNode.attachChild(testQuadMax);
-                        testQuadMax.setLocalTranslation(pickupMax.x, pickupMax.y, 10f);*/
                         
-                        //System.out.println("Checking pickup:" + id + " " + pickupMin + " " + pickupMax);
+                        System.out.println(pickup.getPickupZoneMin());
+                        
                         if(Helpers.pointInArea(mousePos,
                                                pickup.getPickupZoneMin(),
                                                pickup.getPickupZoneMax())) {
                             System.out.println("Picked up pickup");
-                            pickup.onPick();
+                            pickup.onPick(ball);
                             pickup.destroy();
                             canSwitchForm = false;
                             break;
-                        } //else System.out.println("Dist:" +pickup.getPickupZoneMin().distance(mousePos));
+                        }
                     }
                     
                     if(canSwitchForm) {

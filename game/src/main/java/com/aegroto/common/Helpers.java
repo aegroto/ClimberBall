@@ -49,11 +49,11 @@ public final class Helpers {
             MAX_BALL_SPEED=4.25f,
             MIN_BALL_SPEED=1.2f,
             
-            SPEED_DIM_FACTOR_MIN=1f, //.99f,
-            SPEED_DIM_FACTOR_MED=1f, //.985f,
-            SPEED_DIM_FACTOR_HIGH=1f, //.98f,
-            SPEED_DIM_FACTOR_HIGHER=1f, //.97f,
-            SPEED_AUG_FACTOR=1.005f;
+            SPEED_DIM_FACTOR_MIN = .99f,
+            SPEED_DIM_FACTOR_MED = .985f,
+            SPEED_DIM_FACTOR_HIGH = .98f,
+            SPEED_DIM_FACTOR_HIGHER = .97f,
+            SPEED_AUG_FACTOR = 1.005f;
     
     private static Application app;
     

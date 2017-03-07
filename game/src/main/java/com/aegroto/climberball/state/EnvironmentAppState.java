@@ -222,14 +222,20 @@ public final class EnvironmentAppState extends BaseAppState {
             chunkList.removeFirst();
         }
         
-        synchronized(pickupList) {
-            for(EntityPickup pickup:pickupList) {
-                if(pickup.isDestroyed()) {
-                    System.out.println("Destroying pickup");
-                    //pickupList.remove(pickup);
-                } else 
-                    pickup.update(tpf);
+        EntityPickup toBeRemovedPickup = null;
+        for(EntityPickup pickup:pickupList) {
+            if(pickup.isDestroyed()) 
+                toBeRemovedPickup=pickup;
+            else if(pickup.checkForBarrage(xBarrage)) {
+                System.out.println("Barrage for id "+pickupList.indexOf(pickup)+" - "+pickup.getNode().getLocalTranslation().x+" "+xBarrage);
+            } else {                
+                pickup.update(tpf);
             }
         }
+        
+        if(toBeRemovedPickup != null) 
+            pickupList.remove(toBeRemovedPickup);
+        
+        //System.out.println(pickupList.size());
     }
 }
