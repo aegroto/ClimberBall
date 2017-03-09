@@ -25,6 +25,7 @@ public class Skin {
     @Getter protected final Texture /*plainParticles, rockParticles, sandParticles, grassParticles,*/ blankTexture;
     @Getter protected final SurfaceSkin plainSkin, rockSkin, sandSkin, grassSkin;  
     @Getter protected final Material backgroundMaterial,
+                                     pickupBorderMaterial,
                                      speedPickupMaterial;
     @Getter protected final BitmapFont guiFont;
     
@@ -35,29 +36,44 @@ public class Skin {
         tex.setMinFilter(Texture.MinFilter.NearestNoMipMaps);
         return tex;
     }
-        
+    
+    private Texture initializeMirroredTexture(AssetManager assetManager,String location) {
+        Texture tex=assetManager.loadTexture(new TextureKey(location, false));
+        tex.setAnisotropicFilter(3);
+        tex.setMagFilter(Texture.MagFilter.Nearest);
+        tex.setMinFilter(Texture.MinFilter.NearestNoMipMaps);
+        return tex;
+    }
+    
     public Skin(AssetManager assetManager,
                        String assetsFolder) {
-        Material mat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);        
+        Material unshadedMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        unshadedMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);        
+        
+        Material animatedSpriteMat=new Material(assetManager, "materials/AnimatedSprite/AnimatedSprite.j3md");
+        animatedSpriteMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);     
 
-        mat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/plain.png"));
-        plainSkin=new SurfaceSkin((byte) 0,mat.clone());     
+        unshadedMat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/plain.png"));
+        plainSkin=new SurfaceSkin((byte) 0,unshadedMat.clone());     
         
-        mat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/rock.png"));
-        rockSkin=new SurfaceSkin((byte) 1,mat.clone());    
+        unshadedMat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/rock.png"));
+        rockSkin=new SurfaceSkin((byte) 1,unshadedMat.clone());    
         
-        mat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/sand.png"));
-        sandSkin=new SurfaceSkin((byte) 2,mat.clone());
+        unshadedMat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/sand.png"));
+        sandSkin=new SurfaceSkin((byte) 2,unshadedMat.clone());
         
-        mat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/grass.png"));
-        grassSkin=new SurfaceSkin((byte) 3,mat.clone());
+        unshadedMat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/grass.png"));
+        grassSkin=new SurfaceSkin((byte) 3,unshadedMat.clone());
         
-        backgroundMaterial=mat.clone();
+        backgroundMaterial=unshadedMat.clone();
         backgroundMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/background.png"));
         
-        speedPickupMaterial=mat.clone();
+        speedPickupMaterial=unshadedMat.clone();
         speedPickupMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/pickups/speed.png"));
+        
+        pickupBorderMaterial=animatedSpriteMat.clone();
+        pickupBorderMaterial.setFloat("totalFrames", 31);
+        pickupBorderMaterial.setTexture("atlas",initializeMirroredTexture(assetManager,assetsFolder+"/pickups/animation_border.png"));
         
         /*plainParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_plain.png");
         rockParticles=initializeTexture(assetManager, assetsFolder+"/particles/particles_rock.png");

@@ -20,7 +20,7 @@ public class EntityPickupSpeed extends EntityPickup {
     protected static float SPEED_BOOST = 2.0f;
     
     public EntityPickupSpeed(Node rootNode,Vector3f spawnPos, Skin skin, AssetManager assetManager) {
-        super(rootNode,spawnPos,assetManager);
+        super(rootNode,spawnPos,skin,assetManager);
         
         geom.setMaterial(skin.getSpeedPickupMaterial());
         

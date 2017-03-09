@@ -7,6 +7,7 @@ package com.aegroto.climberball.entity.pickup;
 
 import com.aegroto.climberball.entity.Entity;
 import com.aegroto.climberball.entity.EntityBall;
+import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
 import com.jme3.asset.AssetManager;
@@ -22,6 +23,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import lombok.Getter;
 
 /**
  *
@@ -33,9 +35,13 @@ public abstract class EntityPickup extends Entity {
     
     protected final float[] rotation = {0f, 0f, 0f};
     
-    protected final float PICKUP_ZONE_EXTENSION_FACTOR = 1.02f;
+    protected static final float PICKUP_ZONE_EXTENSION_FACTOR = 1.02f;
     
-    public EntityPickup(Node terrainNode,Vector3f spawnPos,AssetManager assetManager) {
+    @Getter protected Geometry borderGeom;
+    protected Material borderMat;
+    
+    public EntityPickup(Node terrainNode,Vector3f spawnPos,Skin skin,AssetManager assetManager) {
+        this.skin = skin;
         this.node=new Node();
         
         this.terrainNode=terrainNode;        
@@ -46,11 +52,19 @@ public abstract class EntityPickup extends Entity {
                 Coordinate2D.yConvert(FastMath.nextRandomInt(-1, 1) / 5000f),
                 0f);
         
-        this.rotationSpeed=FastMath.QUARTER_PI/256f * FastMath.nextRandomFloat() * FastMath.nextRandomInt(-1, 1);
+        this.rotationSpeed = FastMath.QUARTER_PI/256f * FastMath.nextRandomFloat() * FastMath.nextRandomInt(-1, 1);
         
         this.size = new Vector2f(Helpers.getPickupSize(),Helpers.getPickupSize());
         
-        geom=new Geometry("Pickup Geometry",new Quad(size.x, size.y));
+        geom = new Geometry("Pickup Geometry",new Quad(size.x, size.y));
+        
+        Vector2f borderSize = size.mult(1.5f);
+        borderGeom = new Geometry("Pickup Border Geometry",new Quad(borderSize.x, borderSize.y));   
+        borderMat = skin.getPickupBorderMaterial().clone();
+        borderGeom.setMaterial(borderMat);
+        
+        borderGeom.setLocalTranslation(-borderSize.x / 6f, -borderSize.y / 6f, 0f);
+        node.attachChild(borderGeom);
         
         node.setLocalTranslation(spawnPos.add(0,Coordinate2D.yConvert(.2f + FastMath.nextRandomInt(0, 30) / 100f),0f));
         
