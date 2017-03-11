@@ -21,4 +21,5 @@ public abstract class EntityAnimation {
     }
     
     public abstract void onUpdate();
+    public void onFinish() { }
 }

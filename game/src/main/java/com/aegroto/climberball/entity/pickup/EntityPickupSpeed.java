@@ -6,6 +6,7 @@
 package com.aegroto.climberball.entity.pickup;
 
 import com.aegroto.climberball.entity.EntityBall;
+import com.aegroto.climberball.entity.anim.EntityAnimationTransition;
 import com.aegroto.climberball.skin.Skin;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
@@ -31,12 +32,8 @@ public class EntityPickupSpeed extends EntityPickup {
     public void onPick(EntityBall ball) {        
         ball.setXSpeed(ball.getXSpeed() + SPEED_BOOST);
         picked = true;
+        destroy();
     } 
-    
-    @Override
-    public void onApplyOnBall(EntityBall ball) {
-        
-    }
 
     @Override
     public void destroy() {

@@ -188,7 +188,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                             !pickup.isPicked()) {
                             guiAppState.getMenu(InGameMenu.class)
                                     .showInfoText("Whoa! You've got a " + pickup.getName() + " !");
-                            pickup.onPick(ball);
+                            pickup.applyOnBall(ball);
                             
                             canSwitchForm = false;
                             break;

@@ -7,6 +7,7 @@ package com.aegroto.climberball.entity.pickup;
 
 import com.aegroto.climberball.entity.Entity;
 import com.aegroto.climberball.entity.EntityBall;
+import com.aegroto.climberball.entity.anim.EntityAnimationTransition;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
@@ -88,8 +89,19 @@ public abstract class EntityPickup extends Entity {
     //protected Geometry testQuadMin,testQuadMax;
     
     public abstract void onPick(EntityBall ball);
-    public abstract void onApplyOnBall(EntityBall ball);
     public abstract String getName();
+    
+    public void applyOnBall(EntityBall ball) {
+        setAnimation(new EntityAnimationTransition(
+                this,
+                getPos(), ball,
+                Coordinate2D.yConvert(.01f)) {
+            @Override
+            public void onFinish() {
+                onPick((EntityBall) entity);
+            }
+        });
+    }
     
     public boolean checkForBarrage(float xBarrage) {
         if(node.getLocalTranslation().x < xBarrage) {    
@@ -109,10 +121,13 @@ public abstract class EntityPickup extends Entity {
         
         if(rotation[2] <= -FastMath.TWO_PI) rotation[2]=0f;
         
-        if(currentAnim != null && !currentAnim.isFinished()) {
-            currentAnim.onUpdate();
-        } else {
-            currentAnim = null;
+        if(currentAnim != null) {
+            if(!currentAnim.isFinished()) {
+                currentAnim.onUpdate();
+            } else {
+                currentAnim.onFinish();
+                currentAnim = null;
+            }
         }
     }
     

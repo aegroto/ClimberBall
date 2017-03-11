@@ -30,6 +30,7 @@ public final class Helpers {
             pickupSize,
             
             epsilon,
+            animationEpsilon,
             baseTextSize;
     
     @Getter private static Vector3f surfaceOffset,startVector;
@@ -75,6 +76,7 @@ public final class Helpers {
         pickupSize=Coordinate2D.yConvert(.1f);
         
         epsilon=(Coordinate2D.xConvert(.01f)+Coordinate2D.yConvert(.01f))/2;
+        epsilon=(Coordinate2D.xConvert(.1f)+Coordinate2D.yConvert(.1f))/2;
         
         surfaceOffset=new Vector3f(0f,Coordinate2D.yConvert(.065f),0f);
         
