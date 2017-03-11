@@ -91,14 +91,14 @@ public abstract class EntityPickup extends Entity {
     public abstract void onPick(EntityBall ball);
     public abstract String getName();
     
-    public void applyOnBall(EntityBall ball) {
+    public void applyOnBall(final EntityBall ball) {
         setAnimation(new EntityAnimationTransition(
                 this,
                 getPos(), ball,
-                Coordinate2D.yConvert(.01f)) {
+                Coordinate2D.yConvert(.001f)) {
             @Override
             public void onFinish() {
-                onPick((EntityBall) entity);
+                onPick(ball);
             }
         });
     }

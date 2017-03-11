@@ -38,9 +38,12 @@ public class EntityAnimationTransition extends EntityAnimation {
         
     @Override
     public void onUpdate() {
-        if(targetEntity != null) targetPos = targetEntity.getPos();
+        if(targetEntity != null) targetPos = targetEntity.getGeom().getWorldTranslation();
         
-        if(currentPos.distance(targetPos) > Helpers.getAnimationEpsilon()) {
+        System.out.println(targetEntity.getGeom().getWorldTranslation());
+        System.out.println(currentPos.distance(targetPos) + " " + speed);
+        
+        if(currentPos.distance(targetPos) > speed) {
            currentPos.addLocal(
                    currentPos.x > targetPos.x ? -speed : speed,
                    currentPos.y > targetPos.y ? -speed : speed,
@@ -48,6 +51,7 @@ public class EntityAnimationTransition extends EntityAnimation {
            );
         } else {
             finished = true;
+            onFinish();
             currentPos = targetPos;
         }
         
