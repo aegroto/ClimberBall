@@ -29,7 +29,9 @@ import lombok.Getter;
  *
  * @author lorenzo
  */
-public abstract class EntityPickup extends Entity {
+public abstract class EntityPickup extends Entity {    
+    @Getter protected boolean picked = false;
+    
     protected final float rotationSpeed;
     protected final Vector3f floatingDirection;
     
@@ -86,6 +88,7 @@ public abstract class EntityPickup extends Entity {
     //protected Geometry testQuadMin,testQuadMax;
     
     public abstract void onPick(EntityBall ball);
+    public abstract void onApplyOnBall(EntityBall ball);
     public abstract String getName();
     
     public boolean checkForBarrage(float xBarrage) {
@@ -105,6 +108,12 @@ public abstract class EntityPickup extends Entity {
         //geom.setLocalTranslation(geom.getLocalTranslation().add(floatingDirection));
         
         if(rotation[2] <= -FastMath.TWO_PI) rotation[2]=0f;
+        
+        if(currentAnim != null && !currentAnim.isFinished()) {
+            currentAnim.onUpdate();
+        } else {
+            currentAnim = null;
+        }
     }
     
     public Vector2f getPickupZoneMin() {

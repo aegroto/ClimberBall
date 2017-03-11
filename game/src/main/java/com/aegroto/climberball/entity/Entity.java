@@ -5,6 +5,7 @@
  */
 package com.aegroto.climberball.entity;
 
+import com.aegroto.climberball.entity.anim.EntityAnimation;
 import com.aegroto.climberball.skin.Skin;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
@@ -32,6 +33,8 @@ public abstract class Entity {
     
     protected Skin skin;
     
+    protected EntityAnimation currentAnim;
+    
     public abstract void update(float tpf);
     public abstract void destroy();
     
@@ -41,5 +44,9 @@ public abstract class Entity {
     
     public Vector3f getPos() {
         return node.getLocalTranslation();
+    }    
+        
+    public void setAnimation(EntityAnimation animation) {
+        currentAnim=animation;
     }
 }

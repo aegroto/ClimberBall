@@ -184,11 +184,11 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                         Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
                         if(Helpers.pointInArea(mousePos,
                                                pickup.getPickupZoneMin(),
-                                               pickup.getPickupZoneMax())) {
+                                               pickup.getPickupZoneMax()) &&
+                            !pickup.isPicked()) {
                             guiAppState.getMenu(InGameMenu.class)
                                     .showInfoText("Whoa! You've got a " + pickup.getName() + " !");
                             pickup.onPick(ball);
-                            pickup.destroy();
                             
                             canSwitchForm = false;
                             break;
