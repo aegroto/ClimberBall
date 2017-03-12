@@ -7,6 +7,7 @@ package com.aegroto.climberball.entity.anim;
 
 import com.aegroto.climberball.entity.Entity;
 import com.aegroto.common.Helpers;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import lombok.Setter;
 
@@ -38,23 +39,40 @@ public class EntityAnimationTransition extends EntityAnimation {
         
     @Override
     public void onUpdate() {
-        if(targetEntity != null) targetPos = targetEntity.getGeom().getWorldTranslation();
+        if(targetEntity != null) 
+            targetPos = targetEntity.getGeom().getWorldTranslation();
         
-        System.out.println(targetEntity.getGeom().getWorldTranslation());
-        System.out.println(currentPos.distance(targetPos) + " " + speed);
+        //System.out.println(currentPos + "\t\t" + targetPos + "\t\t" + currentPos.distance(targetPos));
+        //System.out.println(currentPos.distance(targetPos) + " " + speed);
         
         if(currentPos.distance(targetPos) > speed) {
-           currentPos.addLocal(
-                   currentPos.x > targetPos.x ? -speed : speed,
-                   currentPos.y > targetPos.y ? -speed : speed,
-                   currentPos.z > targetPos.z ? -speed : speed
-           );
+            float addX = 0f,addY = 0f,
+                  xDist = FastMath.abs(currentPos.x - targetPos.x),
+                  yDist = FastMath.abs(currentPos.y - targetPos.y),
+                  speedBalance = xDist / yDist;
+            
+            if(speedBalance > .9f) speedBalance = .9f;
+            
+            if(xDist > speed && currentPos.x > targetPos.x) {
+                addX = -speed;
+            } else {
+                addX = speed;
+            }
+            
+            if(yDist > speed && currentPos.y > targetPos.y) {
+                addY = -speed;
+            } else {
+                addY = speed;
+            }
+            
+            currentPos.addLocal(addX * speedBalance, addY * (1-speedBalance), 0);
         } else {
             finished = true;
             onFinish();
             currentPos = targetPos;
         }
         
-        entity.setPos(currentPos);
-    }    
+        if(entity != null)
+            entity.setGlobalPos(currentPos);
+    }        
 }

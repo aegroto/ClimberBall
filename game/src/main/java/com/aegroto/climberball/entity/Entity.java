@@ -44,7 +44,13 @@ public abstract class Entity {
     
     public Vector3f getPos() {
         return node.getLocalTranslation();
-    }    
+    }  
+    
+    public void setGlobalPos(Vector3f pos) {
+        if(node.getParent() != null)
+            setPos(pos.subtract(node.getParent().getWorldTranslation()));
+        else setPos(pos);
+    }
         
     public void setAnimation(EntityAnimation animation) {
         currentAnim=animation;

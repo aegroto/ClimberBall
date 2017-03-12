@@ -30,7 +30,6 @@ public final class Helpers {
             pickupSize,
             
             epsilon,
-            animationEpsilon,
             baseTextSize;
     
     @Getter private static Vector3f surfaceOffset,startVector;
@@ -38,7 +37,7 @@ public final class Helpers {
     public static final int UPDATE_TIME=10;
     
     public static final float 
-            INITIAL_SPEED=0.5f,
+            INITIAL_SPEED=1.75f,
             
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
             CHANGE_SURFACE_VARIATION_ENHANCING=.01f,
@@ -46,9 +45,9 @@ public final class Helpers {
             INITIAL_PICKUP_SPAWNING_VARIATION=.0005f,   
             PICKUP_SPAWNING_VARIATION_ENHANCING=.001f,
             
-            INITIAL_PLAYER_SPEED=0.25f, //1.75f,
-            MAX_BALL_SPEED=1f, //10.25f,
-            MIN_BALL_SPEED=1f, //1.2f,
+            INITIAL_PLAYER_SPEED=1.75f,
+            MAX_BALL_SPEED=10.25f,
+            MIN_BALL_SPEED=1.2f,
             
             SPEED_DIM_FACTOR_MIN = .99f,
             SPEED_DIM_FACTOR_MED = .985f,
@@ -76,7 +75,6 @@ public final class Helpers {
         pickupSize=Coordinate2D.yConvert(.1f);
         
         epsilon=(Coordinate2D.xConvert(.01f)+Coordinate2D.yConvert(.01f))/2;
-        epsilon=(Coordinate2D.xConvert(.1f)+Coordinate2D.yConvert(.1f))/2;
         
         surfaceOffset=new Vector3f(0f,Coordinate2D.yConvert(.065f),0f);
         
