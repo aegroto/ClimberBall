@@ -31,6 +31,9 @@ import lombok.Setter;
  * @author lorenzo
  */
 public class EntityBall extends Entity {
+    public static final byte 
+            EFFECT_SPEED_PICKUP_BOOST = 0;
+    
     protected Geometry borderGeom;
     protected Material borderMaterial;
     
@@ -80,13 +83,21 @@ public class EntityBall extends Entity {
         switchForm();
     }
     
-    //private final Quaternion rotation=new Quaternion().fromAngles(0f,0f,FastMath.QUARTER_PI);
     @Setter private float rotationSpeed=FastMath.QUARTER_PI/16f;
     private final float[] rotation={0f,0f,0f};
     
-    private final float borderScalingSpeed=.2f,particlesSpeed=.05f;
-    private float borderScaling=1f,particlesX=0f,particlesY=0f;
-    private boolean switchingForm=false;
+    /*private final float 
+            particlesSpeed = .05f;*/
+    private float             
+            borderScalingSpeed = .1f,
+            borderScale = 1f,
+            targetBorderScale,
+            
+            maxBorderScale = 2.5f,
+            minBorderScale = .4f,
+            
+            particlesX=0f,
+            particlesY=0f;
     
     @Override
     public void update(float tpf) {
@@ -96,29 +107,49 @@ public class EntityBall extends Entity {
         
         if(rotation[2] <= -FastMath.TWO_PI) rotation[2]=0f;
         
-        if(switchingForm) {
-            borderScaling-=borderScalingSpeed;
-            if(borderScaling<=.4f) switchingForm=false;
+        if(borderScale < targetBorderScale) {
+            borderScale += borderScalingSpeed;
             
-            bodyNode.setLocalScale(borderScaling);
-        } else if(borderScaling<1f) {
-            borderScaling+=borderScalingSpeed;
+            if(borderScale >= targetBorderScale) {
+                targetBorderScale = 1f;
+            } else if(FastMath.abs(targetBorderScale - 1f) < borderScalingSpeed) {
+                borderScale = 1f;
+            }
             
-            bodyNode.setLocalScale(borderScaling);
+            bodyNode.setLocalScale(borderScale);
+        } else if(borderScale > targetBorderScale) {
+            borderScale -= borderScalingSpeed;
+            
+            if(borderScale <= targetBorderScale) {
+                targetBorderScale = 1f;
+            } else if(FastMath.abs(targetBorderScale - 1f) < borderScalingSpeed) {
+                borderScale = 1f;
+            }
+            
+            bodyNode.setLocalScale(borderScale);
         }
         
-        if(particlesX <= 0f || particlesY >= 1f) {
+        /*if(particlesX <= 0f || particlesY >= 1f) {
             particlesX=1f;
             particlesY=0f;
         } else {
             particlesX-=particlesSpeed;
             particlesY+=particlesSpeed;
+        }*/
+    }
+    
+    public void applyEffect(byte effectId) {
+        switch(effectId) {
+            case EFFECT_SPEED_PICKUP_BOOST:
+                targetBorderScale = 1.25f;
+                borderScalingSpeed = .02f;
+                break;
         }
     }
     
-    public void updateParticles(TerrainChunk rootingChunk,byte surfaceType) {
+    /*public void updateParticles(TerrainChunk rootingChunk,byte surfaceType) {
         //particleEmitter.emitAllParticles();
-        /*switch(surfaceType) { 
+        switch(surfaceType) { 
             case 1: 
                 particleMat.setTexture("Texture", skin.getRockParticles());
                 particleEmitter.emitAllParticles();
@@ -127,8 +158,8 @@ public class EntityBall extends Entity {
                 particleMat.setTexture("Texture", skin.getGrassParticles());
                 particleEmitter.emitAllParticles();
                 break;
-        }*/
-    }
+        }
+    }*/
 
     @Override
     public void destroy() {
@@ -164,7 +195,9 @@ public class EntityBall extends Entity {
                 borderMaterial.setTexture("ColorMap", skin.getBallSkin().getPlainTexture());
         }
         
-        switchingForm=true;
+        targetBorderScale = .4f;        
+        borderScalingSpeed = .2f;
+        
         return currentForm;
     }
 }

@@ -30,7 +30,11 @@ import lombok.Getter;
  *
  * @author lorenzo
  */
-public abstract class EntityPickup extends Entity {    
+public abstract class EntityPickup extends Entity { 
+    public static final byte 
+            NONE_ID = 0,
+            SPEED_ID = 1;
+    
     @Getter protected boolean picked = false;
     
     protected final float rotationSpeed;

@@ -45,9 +45,9 @@ public final class Helpers {
             INITIAL_PICKUP_SPAWNING_VARIATION=.00000005f,   
             PICKUP_SPAWNING_VARIATION_ENHANCING=.0000001f,
             
-            INITIAL_PLAYER_SPEED=1.75f,
-            MAX_BALL_SPEED=10.25f,
-            MIN_BALL_SPEED=1.2f,
+            INITIAL_PLAYER_SPEED=1.25f,
+            MAX_BALL_SPEED=5.25f,
+            MIN_BALL_SPEED=1.0f,
             
             SPEED_DIM_FACTOR_MIN = .99f,
             SPEED_DIM_FACTOR_MED = .985f,

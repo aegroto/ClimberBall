@@ -140,12 +140,12 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                 if (chunk != lastChunk) {
                     score++;
                     lastChunk = chunk;
-                    getApplication().enqueue(new Callable<Object>() {
+                    /*getApplication().enqueue(new Callable<Object>() {
                         public Object call() {
                             ball.updateParticles(chunk, chunk.getSurfaceType());
                             return null;
                         }
-                    });
+                    });*/
                     //System.out.println("Score: "+score);
                 }
             }

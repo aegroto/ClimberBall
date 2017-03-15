@@ -30,6 +30,8 @@ public class EntityPickupSpeed extends EntityPickup {
 
     @Override
     public void onPick(EntityBall ball) {        
+        ball.applyEffect(EntityBall.EFFECT_SPEED_PICKUP_BOOST);
+        
         ball.setXSpeed(ball.getXSpeed() + SPEED_BOOST);
         picked = true;
         destroy();
