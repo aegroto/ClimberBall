@@ -112,8 +112,8 @@ public class EntityBall extends Entity {
             
             if(borderScale >= targetBorderScale) {
                 targetBorderScale = 1f;
-            } else if(FastMath.abs(targetBorderScale - 1f) < borderScalingSpeed) {
-                borderScale = 1f;
+            } else if(FastMath.abs(borderScale - 1f) < borderScalingSpeed) {
+                resetBorderScaling();
             }
             
             bodyNode.setLocalScale(borderScale);
@@ -122,27 +122,18 @@ public class EntityBall extends Entity {
             
             if(borderScale <= targetBorderScale) {
                 targetBorderScale = 1f;
-            } else if(FastMath.abs(targetBorderScale - 1f) < borderScalingSpeed) {
-                borderScale = 1f;
+            } else if(FastMath.abs(borderScale - 1f) < borderScalingSpeed) {
+                resetBorderScaling();
             }
             
             bodyNode.setLocalScale(borderScale);
         }
-        
-        /*if(particlesX <= 0f || particlesY >= 1f) {
-            particlesX=1f;
-            particlesY=0f;
-        } else {
-            particlesX-=particlesSpeed;
-            particlesY+=particlesSpeed;
-        }*/
     }
     
     public void applyEffect(byte effectId) {
         switch(effectId) {
             case EFFECT_SPEED_PICKUP_BOOST:
-                targetBorderScale = 1.25f;
-                borderScalingSpeed = .02f;
+                queueBorderScaling(1.5f, .05f);
                 break;
         }
     }
@@ -195,9 +186,19 @@ public class EntityBall extends Entity {
                 borderMaterial.setTexture("ColorMap", skin.getBallSkin().getPlainTexture());
         }
         
-        targetBorderScale = .4f;        
-        borderScalingSpeed = .2f;
+        resetBorderScaling();
+        queueBorderScaling(.4f, .2f);
         
         return currentForm;
+    }
+    
+    private void queueBorderScaling(float targetBorderScale, float borderScalingSpeed) {
+        this.targetBorderScale = targetBorderScale;
+        this.borderScalingSpeed = borderScalingSpeed;
+    }
+    
+    private void resetBorderScaling() {
+        this.borderScale = 1f;
+        this.borderScalingSpeed = .1f;
     }
 }
