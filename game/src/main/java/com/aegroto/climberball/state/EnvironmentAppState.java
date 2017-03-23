@@ -226,9 +226,7 @@ public final class EnvironmentAppState extends BaseAppState {
         for(EntityPickup pickup:pickupList) {
             if(pickup.isDestroyed()) 
                 toBeRemovedPickup=pickup;
-            else if(pickup.checkForBarrage(xBarrage)) {
-                System.out.println("Barrage for id "+pickupList.indexOf(pickup)+" - "+pickup.getNode().getLocalTranslation().x+" "+xBarrage);
-            } else {                
+            else if(!pickup.checkForBarrage(xBarrage)) {              
                 pickup.update(tpf);
             }
         }

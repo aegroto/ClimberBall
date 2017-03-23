@@ -95,6 +95,7 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         this.setDisplayStatView(false);
+        
         inputManager.setSimulateMouse(true);
         
         executor=(ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
@@ -114,7 +115,7 @@ public class Main extends SimpleApplication {
     }
     
     @Override 
-    public void simpleUpdate(float tpf) {  
+    public void simpleUpdate(float tpf) {        
         //STATES 
         if(initSkinAppState) {
             skinAppState=new SkinAppState("base");

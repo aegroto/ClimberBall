@@ -57,7 +57,7 @@ public class EntityBall extends Entity {
         geom=new Geometry("Ball Geometry",new Quad(size.x, size.y));     
         geom.setLocalTranslation(-Helpers.getBallSize()/2f,-Helpers.getBallSize()/2f,2f);
         
-        material=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        material=new Material(assetManager, "materials/Sprite/Sprite.j3md");
         material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); 
         //material.setTexture("ColorMap", skin.getBallSkin().getBaseTexture());
         
@@ -70,7 +70,7 @@ public class EntityBall extends Entity {
         borderGeom.setLocalTranslation(geom.getLocalTranslation().add(
                 new Vector3f(-size.x*.15f, -size.x*.15f, -1f)));
         
-        borderMaterial=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        borderMaterial=new Material(assetManager, "materials/Sprite/Sprite.j3md");
         borderMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);  
          
         borderGeom.setMaterial(borderMaterial);  
@@ -84,7 +84,8 @@ public class EntityBall extends Entity {
     }
     
     @Setter private float rotationSpeed=FastMath.QUARTER_PI/16f;
-    private final float[] rotation={0f,0f,0f};
+    //private final float[] rotation={0f,0f,0f};
+    private float rotation = 0f;
     
     /*private final float 
             particlesSpeed = .05f;*/
@@ -101,11 +102,13 @@ public class EntityBall extends Entity {
     
     @Override
     public void update(float tpf) {
-        rotation[2]-=rotationSpeed;
+        rotation+=rotationSpeed;
         
-        bodyNode.setLocalRotation(new Quaternion().fromAngles(rotation));
+        //bodyNode.setLocalRotation(new Quaternion().fromAngles(rotation));
+        material.setFloat("RotationAngle", rotation);
+        borderMaterial.setFloat("RotationAngle", rotation);
         
-        if(rotation[2] <= -FastMath.TWO_PI) rotation[2]=0f;
+        if(rotation <= -FastMath.TWO_PI) rotation=0f;
         
         if(borderScale < targetBorderScale) {
             borderScale += borderScalingSpeed;
@@ -170,20 +173,20 @@ public class EntityBall extends Entity {
         
         switch(currentForm) {
             case 1:
-                material.setTexture("ColorMap", skin.getBallSkin().getCoreRockTexture());
-                borderMaterial.setTexture("ColorMap", skin.getBallSkin().getRockTexture());
+                material.setTexture("Texture", skin.getBallSkin().getCoreRockTexture());
+                borderMaterial.setTexture("Texture", skin.getBallSkin().getRockTexture());
                 break;
             case 2:
-                material.setTexture("ColorMap", skin.getBallSkin().getCoreSandTexture());
-                borderMaterial.setTexture("ColorMap", skin.getBallSkin().getSandTexture());
+                material.setTexture("Texture", skin.getBallSkin().getCoreSandTexture());
+                borderMaterial.setTexture("Texture", skin.getBallSkin().getSandTexture());
                 break;
             case 3:
-                material.setTexture("ColorMap", skin.getBallSkin().getCoreGrassTexture());
-                borderMaterial.setTexture("ColorMap", skin.getBallSkin().getGrassTexture());
+                material.setTexture("Texture", skin.getBallSkin().getCoreGrassTexture());
+                borderMaterial.setTexture("Texture", skin.getBallSkin().getGrassTexture());
                 break;
             default:
-                material.setTexture("ColorMap", skin.getBallSkin().getCorePlainTexture());
-                borderMaterial.setTexture("ColorMap", skin.getBallSkin().getPlainTexture());
+                material.setTexture("Texture", skin.getBallSkin().getCorePlainTexture());
+                borderMaterial.setTexture("Texture", skin.getBallSkin().getPlainTexture());
         }
         
         resetBorderScaling();
