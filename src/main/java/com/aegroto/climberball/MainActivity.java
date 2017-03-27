@@ -15,6 +15,7 @@ import java.util.concurrent.Callable;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import java.io.File;
  
 public class MainActivity extends Activity {
     /*
@@ -47,10 +48,12 @@ public class MainActivity extends Activity {
                 (AndroidHarnessFragment) fm.findFragmentById(R.id.jmeFragment); 
         
         //97B98342FB4CF17F648567CD76F539A8
-        interstitialAd =  new InterstitialAd(this);
+        interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(interstitialUnitId);
         
         loadInterstitialAd();
+        
+        Main.initializeCacheManager(getCacheDir().getAbsolutePath()+"/cache"); 
         
         /*Main.setSecondChanceCallable(new Callable<Object>() {
            @Override

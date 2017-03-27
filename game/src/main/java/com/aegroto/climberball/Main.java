@@ -25,13 +25,31 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lombok.Getter;
 import lombok.Setter;
+import org.yaml.snakeyaml.Yaml;
 
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication {    
+    private static CacheManager cacheManager;
+    
+    public static void initializeCacheManager(String cacheLocation) {
+        cacheManager = new CacheManager(cacheLocation);
+    }
+    
     public static void main(String[] args) {
+        initializeCacheManager("cache.yaml");
+        
+        cacheManager.saveCacheOnFile();
+        
         Main app = new Main();
         AppSettings settings = new AppSettings(true);
         settings.setWidth(50*16);
@@ -92,9 +110,22 @@ public class Main extends SimpleApplication {
         hasSecondChance=false;
     }
     
+    private void checkAndRepairCache(CacheManager cacheManager) {
+        boolean repaired = false;
+        if(cacheManager.getCacheBlock("BestScore") == null) {
+            cacheManager.setCacheBlock("BestScore", 0);
+            repaired = true;
+        }
+        
+        if(repaired)
+            cacheManager.saveCacheOnFile();
+    }
+    
     @Override
     public void simpleInitApp() {
         this.setDisplayStatView(false);
+        
+        checkAndRepairCache(cacheManager);
         
         inputManager.setSimulateMouse(true);
         
