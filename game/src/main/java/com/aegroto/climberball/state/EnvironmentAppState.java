@@ -101,7 +101,7 @@ public final class EnvironmentAppState extends BaseAppState {
         changeSurfaceVariation=Helpers.INITIAL_CHANGE_SURFACE_VARIATION;  
         changeSurfaceVariationEnhancer=0f;
                 
-        executor.execute(asynchronousTick);
+        //executor.execute(asynchronousTick);
         rootNode.attachChild(terrainNode);
         rootNode.attachChild(backgroundGeom);
         
@@ -191,7 +191,7 @@ public final class EnvironmentAppState extends BaseAppState {
     
     private boolean keepUpdating=true;
     
-    private final Runnable asynchronousTick=new Runnable() {
+    /*private final Runnable asynchronousTick=new Runnable() {
         @Override
         public void run() {
             xBarrage+=speed;
@@ -210,10 +210,7 @@ public final class EnvironmentAppState extends BaseAppState {
             
             if(keepUpdating) executor.schedule(this, Helpers.UPDATE_TIME, TimeUnit.MILLISECONDS);
         }            
-    };
-    
-    
-    float UPDATE_TIME = 1000f / 60f;
+    };*/
     
     @Override
     public void update(float tpf) {
@@ -237,21 +234,12 @@ public final class EnvironmentAppState extends BaseAppState {
         if(toBeRemovedPickup != null) 
             pickupList.remove(toBeRemovedPickup);
         
-        float speedFactor = 1f;
-        xBarrage += speed * speedFactor;
+        xBarrage += speed;
             
-        /*getApplication().enqueue(new Callable<Object>() {
-            @Override
-            public Object call() {*/
-        terrainNode.setLocalTranslation(terrainNode.getLocalTranslation().x - speed * speedFactor, 0f, 5f);
-                /*return null;
-            }
-        });*/
+        terrainNode.setLocalTranslation(terrainNode.getLocalTranslation().x - speed, 0f, 5f);
 
         try {
             chunkList.getFirst().checkForBarrage(xBarrage);
         } catch(NoSuchElementException e) { generateChunk(); }
-            
-        //System.out.println(pickupList.size());
     }
 }

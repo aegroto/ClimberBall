@@ -100,7 +100,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED);
         ball.setYSpeed(Helpers.INITIAL_PLAYER_SPEED * .5f);
 
-        executor.execute(asynchronousTick);
+        //executor.execute(asynchronousTick);
     }
 
     @Override
@@ -111,15 +111,13 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     private boolean keepUpdating = true;
     private TerrainChunk lastChunk;
 
-    private final Runnable asynchronousTick = new Runnable() {
+    /*private final Runnable asynchronousTick = new Runnable() {
         @Override
         public void run() {
             //try {  
             if (!gameLost) {
                 final TerrainChunk chunk = chunkList.get((int) (ball.getPos().x / Helpers.getTerrainChunkSize()) + 1);
 
-                /*chunkList.get(chunkIndex).getDebugMaterial().setColor("Color", ColorRGBA.Red);
-                    if(chunkIndex>0) chunkList.get(chunkIndex-1).getDebugMaterial().setColor("Color", ColorRGBA.Black);*/
                 ball.setXSpeed(chunk.elaborateSpeedOnSurface(ball.getXSpeed(), ball.getCurrentForm()));
 
                 targetPos = chunk.getTargetVector();
@@ -140,12 +138,6 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                 if (chunk != lastChunk) {
                     score++;
                     lastChunk = chunk;
-                    /*getApplication().enqueue(new Callable<Object>() {
-                        public Object call() {
-                            ball.updateParticles(chunk, chunk.getSurfaceType());
-                            return null;
-                        }
-                    });*/
                     //System.out.println("Score: "+score);
                 }
             }
@@ -153,11 +145,8 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
             if (keepUpdating) {
                 executor.schedule(this, Helpers.UPDATE_TIME, TimeUnit.MILLISECONDS);
             }
-            /*} catch(Exception e) {
-                e.printStackTrace();
-            }*/
         }
-    };
+    };*/
 
     @Override
     public void update(float tpf) {
