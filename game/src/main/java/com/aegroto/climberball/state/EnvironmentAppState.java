@@ -212,6 +212,9 @@ public final class EnvironmentAppState extends BaseAppState {
         }            
     };
     
+    
+    float UPDATE_TIME = 1000f / 60f;
+    
     @Override
     public void update(float tpf) {
         TerrainChunk first=chunkList.getFirst();
@@ -234,6 +237,21 @@ public final class EnvironmentAppState extends BaseAppState {
         if(toBeRemovedPickup != null) 
             pickupList.remove(toBeRemovedPickup);
         
+        float speedFactor = 1f;
+        xBarrage += speed * speedFactor;
+            
+        /*getApplication().enqueue(new Callable<Object>() {
+            @Override
+            public Object call() {*/
+        terrainNode.setLocalTranslation(terrainNode.getLocalTranslation().x - speed * speedFactor, 0f, 5f);
+                /*return null;
+            }
+        });*/
+
+        try {
+            chunkList.getFirst().checkForBarrage(xBarrage);
+        } catch(NoSuchElementException e) { generateChunk(); }
+            
         //System.out.println(pickupList.size());
     }
 }

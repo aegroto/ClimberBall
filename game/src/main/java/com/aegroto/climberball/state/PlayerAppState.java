@@ -163,6 +163,32 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     public void update(float tpf) {
         ball.setRotationSpeed(ball.getXSpeed() * .075f);
         ball.update(tpf);
+        
+        if (!gameLost) {
+            final TerrainChunk chunk = chunkList.get((int) (ball.getPos().x / Helpers.getTerrainChunkSize()) + 1);
+            
+            ball.setXSpeed(chunk.elaborateSpeedOnSurface(ball.getXSpeed(), ball.getCurrentForm()));
+
+            targetPos = chunk.getTargetVector();
+            float xAdd = ball.getPos().x > Helpers.getBallMaxX() ? 0 : ball.getXSpeed(),
+                    yAdd = FastMath.abs(ball.getPos().y - targetPos.y) > ball.getYSpeed()
+                    ? ball.getPos().y > targetPos.y ? -ball.getYSpeed() : ball.getYSpeed()
+                    : 0;
+
+            ball.safeSetPos(new Vector2f(
+                    ball.getPos().x + xAdd - Helpers.INITIAL_SPEED,
+                    ball.getPos().y + yAdd
+            ));
+
+            if (ball.getPos().x <= Helpers.getBallMinX()) {
+                gameLost = true;
+            }
+
+            if (chunk != lastChunk) {
+                score++;
+                lastChunk = chunk;
+            }
+        }
     }
 
     public void useSecondChance() {

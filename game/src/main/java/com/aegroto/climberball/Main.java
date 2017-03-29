@@ -54,6 +54,7 @@ public class Main extends SimpleApplication {
         AppSettings settings = new AppSettings(true);
         settings.setWidth(50*16);
         settings.setHeight(50*9);
+        settings.setFrameRate(60);
         app.setSettings(settings);
         app.setShowSettings(false);
         app.start();

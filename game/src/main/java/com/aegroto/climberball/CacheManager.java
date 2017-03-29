@@ -22,24 +22,24 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class CacheManager {    
     @Getter @Setter private File cacheFile;
-    private Yaml yaml;
+    //private Yaml yaml;
     
     private HashMap<String, Object> cacheBlocks;
     
     public CacheManager(String location) {
         cacheFile = new File(location);
-        yaml = new Yaml();  
+        //yaml = new Yaml();  
             
-        try {
+        /*try {
             cacheBlocks = yaml.loadAs(new FileInputStream(cacheFile), HashMap.class);
         } catch(FileNotFoundException e) {
             System.err.println("Unable to load cache blocks from current cache file");
-        }
+        }*/
         
         if(cacheBlocks == null)             
             cacheBlocks = new HashMap<>();
         
-        try {
+        /*try {
             yaml.load(new FileInputStream(cacheFile));
         } catch (FileNotFoundException ex) {
             try {
@@ -47,7 +47,7 @@ public class CacheManager {
             } catch (IOException ex1) {
                 System.err.println("ERROR! Unable to create or write on cache file");
             }
-        }
+        }*/
     }
     
     public void setCacheBlock(String id,Object obj) {
@@ -61,7 +61,7 @@ public class CacheManager {
     public boolean saveCacheOnFile() {
         try {
             FileWriter writer = new FileWriter(cacheFile);            
-            yaml.dump(cacheBlocks, writer);            
+            //yaml.dump(cacheBlocks, writer);            
             writer.close();
         } catch(IOException e) {
             return false;
