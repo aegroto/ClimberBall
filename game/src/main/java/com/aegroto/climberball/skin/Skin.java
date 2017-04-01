@@ -51,8 +51,11 @@ public class Skin {
         unshadedMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);        
         
         Material animatedSpriteMat=new Material(assetManager, "materials/AnimatedSprite/AnimatedSprite.j3md");
-        animatedSpriteMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);     
-
+        animatedSpriteMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);  
+        
+        Material slidingBackgroundMat=new Material(assetManager, "materials/SlidingBackground/SlidingBackground.j3md");
+        slidingBackgroundMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);  
+        
         unshadedMat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/plain.png"));
         plainSkin=new SurfaceSkin((byte) 0,unshadedMat.clone());     
         
@@ -65,8 +68,10 @@ public class Skin {
         unshadedMat.setTexture("ColorMap", initializeTexture(assetManager,assetsFolder+"/grass.png"));
         grassSkin=new SurfaceSkin((byte) 3,unshadedMat.clone());
         
-        backgroundMaterial=unshadedMat.clone();
-        backgroundMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/background.png"));
+        backgroundMaterial=slidingBackgroundMat.clone();
+        Texture backgroundTexture = initializeTexture(assetManager,assetsFolder+"/background.png");
+        backgroundTexture.setWrap(Texture.WrapMode.Repeat);
+        backgroundMaterial.setTexture("Texture", backgroundTexture);
         
         speedPickupMaterial=unshadedMat.clone();
         speedPickupMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/pickups/speed.png"));

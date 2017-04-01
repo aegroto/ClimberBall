@@ -44,7 +44,6 @@ import lombok.Getter;
  */
 public final class EnvironmentAppState extends BaseAppState {    
     protected Node rootNode,terrainNode;
-    protected Geometry backgroundGeom;
     protected Material chunkMat;
     @Getter protected LinkedList<TerrainChunk> chunkList;
     @Getter protected ArrayList<EntityPickup> pickupList;
@@ -77,10 +76,6 @@ public final class EnvironmentAppState extends BaseAppState {
         chunkMat.setColor("Color", ColorRGBA.Black);
              
         terrainNode=new Node();
-        
-        backgroundGeom=new Geometry("Environment Background",
-                new Quad(Coordinate2D.xConvert(1f), Coordinate2D.yConvert(1f)));
-        backgroundGeom.setMaterial(skin.getBackgroundMaterial());
     }
 
     @Override
@@ -103,9 +98,6 @@ public final class EnvironmentAppState extends BaseAppState {
                 
         //executor.execute(asynchronousTick);
         rootNode.attachChild(terrainNode);
-        rootNode.attachChild(backgroundGeom);
-        
-        backgroundGeom.setLocalTranslation(0f, 0f, -5f);
         int initialChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f);
 
         

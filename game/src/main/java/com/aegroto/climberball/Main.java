@@ -3,6 +3,7 @@ package com.aegroto.climberball;
 import com.aegroto.climberball.menu.GameOverMenu;
 import com.aegroto.climberball.menu.InGameMenu;
 import com.aegroto.climberball.menu.StartMenu;
+import com.aegroto.climberball.state.BackgroundAppState;
 import com.aegroto.climberball.state.EnvironmentAppState;
 import com.aegroto.climberball.state.PlayerAppState;
 import com.aegroto.climberball.state.SkinAppState;
@@ -61,6 +62,7 @@ public class Main extends SimpleApplication {
     }
 
     //STATES
+    private static BackgroundAppState backgroundAppState;
     private static EnvironmentAppState environmentAppState;
     private static PlayerAppState playerAppState;
     private static SkinAppState skinAppState;
@@ -75,10 +77,11 @@ public class Main extends SimpleApplication {
     private static ScheduledThreadPoolExecutor executor;
 
     private static boolean 
-            //Initialization
+            //Initialization            
             initSkinAppState=false,
             initSoundAppState=false,
             initGuiAppState=false,
+            initBackgroundAppState=false,
             initEnvironmentAppState=false,
             initStartMenu=false,
             initPlayerAppState=false,
@@ -141,6 +144,7 @@ public class Main extends SimpleApplication {
         initSkinAppState=true; 
         initSoundAppState=true;
         initGuiAppState=true;
+        initBackgroundAppState=true;
         initEnvironmentAppState=true;
         initStartMenu=true;
         //initGameOverMenu=true;
@@ -157,10 +161,15 @@ public class Main extends SimpleApplication {
         } else if(initSoundAppState) {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
-            soundAppState.setEffectsVolume(1f);
-            soundAppState.setMusicVolume(1f);
+            soundAppState.setEffectsVolume(0f);
+            soundAppState.setMusicVolume(0f);
             
             initSoundAppState=false;
+        } else if(initBackgroundAppState) {
+            backgroundAppState = new BackgroundAppState(guiNode, skinAppState.getCurrentSkin());
+            stateManager.attach(backgroundAppState);
+            
+            initBackgroundAppState=false;
         } else if(initEnvironmentAppState) {
             environmentAppState=new EnvironmentAppState(guiNode,executor,skinAppState.getCurrentSkin());
             stateManager.attach(environmentAppState);
