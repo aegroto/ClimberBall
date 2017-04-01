@@ -37,7 +37,7 @@ public final class Helpers {
     public static final int UPDATE_TIME=10;
     
     public static final float 
-            INITIAL_SPEED=1.75f,
+            INITIAL_SPEED=3.00f,
             
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
             CHANGE_SURFACE_VARIATION_ENHANCING=.00001f,
@@ -45,14 +45,14 @@ public final class Helpers {
             INITIAL_PICKUP_SPAWNING_VARIATION=.00000005f,   
             PICKUP_SPAWNING_VARIATION_ENHANCING=.0000001f,
             
-            INITIAL_PLAYER_SPEED=1.25f,
-            MAX_BALL_SPEED=5.25f,
-            MIN_BALL_SPEED=1.0f,
+            INITIAL_PLAYER_SPEED=2.5f,
+            MAX_BALL_SPEED=4.25f,
+            MIN_BALL_SPEED=1.25f,
             
-            SPEED_DIM_FACTOR_MIN = .99f,
-            SPEED_DIM_FACTOR_MED = .985f,
-            SPEED_DIM_FACTOR_HIGH = .98f,
-            SPEED_DIM_FACTOR_HIGHER = .97f,
+            SPEED_DIM_FACTOR_MIN = .98f,
+            SPEED_DIM_FACTOR_MED = .975f,
+            SPEED_DIM_FACTOR_HIGH = .96f,
+            SPEED_DIM_FACTOR_HIGHER = .95f,
             SPEED_AUG_FACTOR = 1.005f;
     
     private static Application app;

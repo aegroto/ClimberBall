@@ -157,8 +157,8 @@ public class Main extends SimpleApplication {
         } else if(initSoundAppState) {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
-            soundAppState.setEffectsVolume(0f);
-            soundAppState.setMusicVolume(0f);
+            soundAppState.setEffectsVolume(1f);
+            soundAppState.setMusicVolume(1f);
             
             initSoundAppState=false;
         } else if(initEnvironmentAppState) {
