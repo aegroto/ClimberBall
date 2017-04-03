@@ -53,7 +53,7 @@ public final class Helpers {
             SPEED_DIM_FACTOR_MED = .975f,
             SPEED_DIM_FACTOR_HIGH = .96f,
             SPEED_DIM_FACTOR_HIGHER = .95f,
-            SPEED_AUG_FACTOR = 1.005f;
+            SPEED_AUG_FACTOR = 1.015f;
     
     private static Application app;
     
