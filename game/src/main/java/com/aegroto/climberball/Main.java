@@ -76,6 +76,8 @@ public class Main extends SimpleApplication {
     
     private static ScheduledThreadPoolExecutor executor;
 
+    @Setter private static boolean androidLaunch = false;
+    
     private static boolean 
             //Initialization            
             initSkinAppState=false,
@@ -134,7 +136,8 @@ public class Main extends SimpleApplication {
         inputManager.setSimulateMouse(true);
         
         executor=(ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
-        assetManager.registerLocator("src/main/resources/_assets", FileLocator.class);
+        if(!androidLaunch) 
+            assetManager.registerLocator("src/main/resources/_assets", FileLocator.class);
         
         Coordinate2D.init(settings);  
         Helpers.init(this,new Vector3f(-Coordinate2D.xConvert(.1f),Coordinate2D.yConvert(.5f),0));   

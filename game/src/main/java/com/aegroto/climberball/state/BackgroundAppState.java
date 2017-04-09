@@ -33,7 +33,13 @@ public class BackgroundAppState extends BaseAppState {
         backgroundGeom=new Geometry("Environment Background",
                 new Quad(Coordinate2D.xConvert(1f), Coordinate2D.yConvert(1f)));
         backgroundGeom.setMaterial(skin.getBackgroundMaterial());
+        
         backgroundGeom.getMaterial().setFloat("SlidingSpeed", 0.25f);
+        
+        backgroundGeom.getMaterial().setFloat("ColorVariationSpeed", 0.2f);
+        backgroundGeom.getMaterial().setFloat("ColorBrightnessVariation", 0.35f);
+        backgroundGeom.getMaterial().setFloat("ColorRedVariation", 0.3f);
+        backgroundGeom.getMaterial().setFloat("ColorGreenVariation", -0.2f);
     }
 
     @Override

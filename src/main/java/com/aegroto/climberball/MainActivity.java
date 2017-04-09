@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
         
         loadInterstitialAd();
         
+        Main.setAndroidLaunch(true);
         Main.initializeCacheManager(getCacheDir().getAbsolutePath()+"/cache"); 
         
         /*Main.setSecondChanceCallable(new Callable<Object>() {
