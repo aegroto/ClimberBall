@@ -48,7 +48,7 @@ public class StartMenu extends Menu {
         attachElement(background=new GUIButton(
                 new Vector2f(0f,0f),
                 new Coordinate2D(1f, 1f).toVector(),
-                "","alpha_background.png",
+                "","gui/light_background.png",
                 guiAppState.getGuiFont(),
                 guiAppState.getAssetManager(), 
                 guiAppState.getGuiConjunctionNode(),

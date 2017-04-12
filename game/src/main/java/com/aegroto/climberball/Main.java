@@ -165,7 +165,7 @@ public class Main extends SimpleApplication {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
             soundAppState.setEffectsVolume(1f);
-            soundAppState.setMusicVolume(1f);
+            soundAppState.setMusicVolume(0f);
             
             initSoundAppState=false;
         } else if(initBackgroundAppState) {
