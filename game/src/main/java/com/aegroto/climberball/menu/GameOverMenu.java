@@ -23,19 +23,22 @@ public class GameOverMenu extends Menu {
     private GUIText scoreText,tipsText;
     private GUIButton background,
                       secondChanceButton;
-    private int score;
+    
+    private final int score;
+    private final boolean hasSecondChance;
     
     private final Callable resetGameCallable,secondChanceCallable;
     private final SimpleApplication app;
     
     public GameOverMenu(Callable resetGameRunnable,Callable secondChanceCallable,
-                        SimpleApplication app,int score) {
+                        SimpleApplication app,int score, boolean hasSecondChance) {
         super();
         
         this.score=score;
         this.resetGameCallable=resetGameRunnable;
         this.secondChanceCallable=secondChanceCallable;
         this.app=app;
+        this.hasSecondChance = hasSecondChance;
     }
     
     @Override
@@ -59,30 +62,41 @@ public class GameOverMenu extends Menu {
         
         background.setZOffset(-1);
         
-        attachElement(secondChanceButton=new GUIButton(
-                new Coordinate2D(0f,.4f).toVector(),
-                new Coordinate2D(.35f, .2f).toVector(),
-                "Second Chance", .4f,
-                guiAppState.getGuiFont(),
-                guiAppState.getAssetManager(), 
-                guiAppState.getGuiConjunctionNode(),
-                guiAppState.getInteractiveGUIsList()
-        ) {
-            @Override
-            public void execFunction() {
-                app.enqueue(secondChanceCallable);
-            }
-        });
-        
-        secondChanceButton.centerX();
+        if(hasSecondChance) {
+            attachElement(secondChanceButton=new GUIButton(
+                    new Coordinate2D(0f,.4f).toVector(),
+                    new Coordinate2D(.35f, .2f).toVector(),
+                    "Second Chance", .4f,
+                    guiAppState.getGuiFont(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode(),
+                    guiAppState.getInteractiveGUIsList()
+            ) {
+                @Override
+                public void execFunction() {
+                    app.enqueue(secondChanceCallable);
+                }
+            });
+
+            secondChanceButton.centerX();
+        }
                 
         attachElement(scoreText=new GUIText(
                 new Coordinate2D(.5f,.75f).toVector(),
-                "Your final score is "+this.score, .5f, 
+                "Ouch! Your final score is "+this.score, .5f, 
                 guiAppState.getGuiFont(), 
                 guiAppState.getGuiConjunctionNode()
         ));
         
         scoreText.centerX();
+        
+        attachElement(tipsText=new GUIText(
+                new Coordinate2D(.5f,.25f).toVector(),
+                "Tap anywhere to retry", .5f, 
+                guiAppState.getGuiFont(), 
+                guiAppState.getGuiConjunctionNode()
+        ));
+        
+        tipsText.centerX();
     }
 }

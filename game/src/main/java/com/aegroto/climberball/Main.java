@@ -97,7 +97,7 @@ public class Main extends SimpleApplication {
     private final Callable resetGameCallable=new Callable<Object>() {
         @Override
         public Object call() {                
-            resetGame();
+            resetGame = true;
             return null;
         }
     };
@@ -165,7 +165,7 @@ public class Main extends SimpleApplication {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
             soundAppState.setEffectsVolume(1f);
-            soundAppState.setMusicVolume(0f);
+            soundAppState.setMusicVolume(1f);
             
             initSoundAppState=false;
         } else if(initBackgroundAppState) {
@@ -206,7 +206,7 @@ public class Main extends SimpleApplication {
 
             initStartMenu=false;
         } else if(initGameOverMenu) {
-            gameOverMenu=new GameOverMenu(resetGameCallable,secondChanceCallable,this,playerAppState.getScore());               
+            gameOverMenu=new GameOverMenu(resetGameCallable,secondChanceCallable,this,playerAppState.getScore(),hasSecondChance);               
             guiAppState.addMenu(gameOverMenu);
             
             initGameOverMenu=false;
@@ -239,6 +239,8 @@ public class Main extends SimpleApplication {
         
         inGameMenu=new InGameMenu();
         guiAppState.addMenu(inGameMenu);
+        
+        hasSecondChance = true;
     }
 
     @Override

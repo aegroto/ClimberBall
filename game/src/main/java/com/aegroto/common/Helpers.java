@@ -40,17 +40,17 @@ public final class Helpers {
             INITIAL_SPEED=3.00f,
             
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
-            CHANGE_SURFACE_VARIATION_ENHANCING=.001f,
+            CHANGE_SURFACE_VARIATION_ENHANCING=.002f,
             
             INITIAL_PICKUP_SPAWNING_VARIATION=.00000005f,   
             PICKUP_SPAWNING_VARIATION_ENHANCING=.0000001f,
             
             INITIAL_PLAYER_SPEED=2.5f,
-            MAX_BALL_SPEED=4.25f,
-            MIN_BALL_SPEED=1.25f,
+            MAX_BALL_SPEED=4f,
+            MIN_BALL_SPEED=1f,
             
-            SPEED_DIM_FACTOR_MIN = .98f,
-            SPEED_DIM_FACTOR_MED = .975f,
+            SPEED_DIM_FACTOR_MIN = .975f,
+            SPEED_DIM_FACTOR_MED = .97f,
             SPEED_DIM_FACTOR_HIGH = .96f,
             SPEED_DIM_FACTOR_HIGHER = .95f,
             SPEED_AUG_FACTOR = 1.015f;

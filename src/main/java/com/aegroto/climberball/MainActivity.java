@@ -14,10 +14,15 @@ import com.aegroto.climberball.R;
 import java.util.concurrent.Callable;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
 import java.io.File;
  
-public class MainActivity extends Activity {
+public class MainActivity extends Activity /* implements RewardedVideoAdListener */ {
     /*
      * Note that you can ignore the errors displayed in this file,
      * the android project will build regardless.
@@ -25,9 +30,11 @@ public class MainActivity extends Activity {
      * to get error checks and code completion for the Android project files.
      */
  
-    private final String interstitialUnitId="ca-app-pub-1805400128871765/3794327135";
-    private InterstitialAd interstitialAd;
+    private final String APP_ID = "ca-app-pub-1805400128871765~2679350737",
+                         rewardedVideoUnitId="ca-app-pub-1805400128871765/5910819939";
     
+    private RewardedVideoAd rewardedVideoAd;
+
     public MainActivity(){
         // Set the default logging level (default=Level.INFO, Level.ALL=All Debug Info)
         LogManager.getLogManager().getLogger("").setLevel(Level.INFO);
@@ -47,47 +54,112 @@ public class MainActivity extends Activity {
         AndroidHarnessFragment jmeFragment =
                 (AndroidHarnessFragment) fm.findFragmentById(R.id.jmeFragment); 
         
-        //97B98342FB4CF17F648567CD76F539A8
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(interstitialUnitId);
-        
-        loadInterstitialAd();
-        
         Main.setAndroidLaunch(true);
         Main.initializeCacheManager(getCacheDir().getAbsolutePath()+"/cache"); 
         
-        /*Main.setSecondChanceCallable(new Callable<Object>() {
+        // 97B98342FB4CF17F648567CD76F539A8
+        
+        /* MobileAds.initialize(this, APP_ID);        
+        
+        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        rewardedVideoAd.setRewardedVideoAdListener(this);
+        
+        Main.setAndroidLaunch(true);
+        Main.initializeCacheManager(getCacheDir().getAbsolutePath()+"/cache"); 
+        loadRewardedVideoAd();
+        
+        Main.setSecondChanceCallable(new Callable<Object>() {
            @Override
            public Object call() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {                
-                        
+                        showRewardedVideo();
                     }
                 });
                 return null;
             }
-        });*/
+        }); */
 
         // uncomment the next line to add the default android profiler to the project
         //jmeFragment.getJmeApplication().setAppProfiler(new DefaultAndroidProfiler());
     }
     
-    private void loadInterstitialAd() {
-        interstitialAd.loadAd(new AdRequest.Builder()
-                .addTestDevice("97B98342FB4CF17F648567CD76F539A8")
-                .build());        
+    private void loadRewardedVideoAd() {
+        if (!rewardedVideoAd.isLoaded()) 
+            rewardedVideoAd.loadAd(rewardedVideoUnitId, new AdRequest.Builder()
+                    .addTestDevice("97B98342FB4CF17F648567CD76F539A8")
+                    .build());
+        System.err.println("[ADS] Loading rewarded video");
     }
     
-    private void showInterstitialAd() {
-        if(interstitialAd.isLoaded()) {
-            interstitialAd.show();
-        }
-        else {
-            loadInterstitialAd();
-            System.err.println("Interstitial not ready");
+    private void showRewardedVideo() {        
+        System.err.println("[ADS] Showing rewarded video");
+        if (rewardedVideoAd.isLoaded()) {
+            rewardedVideoAd.show();
+            System.err.println("[ADS] Showed rewarded video");
+        } else {
+            loadRewardedVideoAd();
+            System.err.println("[ADS] Unable to show rewarded video, loading a new one...");
         }
     }
+    
+    /* @Override
+    public void onRewardedVideoAdLeftApplication() {
+        System.out.println("[ADS] onRewardedVideoAdLeftApplication");
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        System.out.println("[ADS] onRewardedVideoAdClosed");
+        // Preload the next video ad.
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int errorCode) {
+        System.out.println("[ADS] onRewardedVideoAdFailedToLoad " + errorCode);
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        System.out.println("[ADS] onRewardedVideoAdLoaded");
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+        System.out.println("[ADS] onRewardedVideoAdOpened");
+    }
+
+    @Override
+    public void onRewarded(RewardItem reward) {
+        System.out.println(
+                String.format("[ADS] onRewarded! currency: %s amount: %d", reward.getType(),
+                        reward.getAmount()));
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+        System.out.println("[ADS] onRewardedVideoStarted");
+    }
+    
+    @Override
+    public void onResume() {
+        rewardedVideoAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        rewardedVideoAd.pause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        rewardedVideoAd.destroy(this);
+        super.onDestroy();
+    } */
 
     public static class JmeFragment extends AndroidHarnessFragment {
         public JmeFragment() {
