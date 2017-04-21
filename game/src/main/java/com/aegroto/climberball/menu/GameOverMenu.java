@@ -5,6 +5,7 @@
  */
 package com.aegroto.climberball.menu;
 
+import com.aegroto.climberball.CacheManager;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.gui.GUIButton;
 import com.aegroto.gui.GUIImage;
@@ -12,6 +13,7 @@ import com.aegroto.gui.GUIText;
 import com.aegroto.gui.menu.Menu;
 import com.aegroto.gui.states.GuiAppState;
 import com.jme3.app.SimpleApplication;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import java.util.concurrent.Callable;
 
@@ -20,7 +22,7 @@ import java.util.concurrent.Callable;
  * @author lorenzo
  */
 public class GameOverMenu extends Menu {
-    private GUIText scoreText,tipsText;
+    private GUIText scoreText,bestScoreText,tipsText;
     private GUIButton background,
                       secondChanceButton;
     
@@ -29,15 +31,17 @@ public class GameOverMenu extends Menu {
     
     private final Callable resetGameCallable,secondChanceCallable;
     private final SimpleApplication app;
+    private final CacheManager cacheManager;
     
     public GameOverMenu(Callable resetGameRunnable,Callable secondChanceCallable,
-                        SimpleApplication app,int score, boolean hasSecondChance) {
+                        SimpleApplication app,CacheManager cacheManager, int score,boolean hasSecondChance) {
         super();
         
-        this.score=score;
-        this.resetGameCallable=resetGameRunnable;
-        this.secondChanceCallable=secondChanceCallable;
-        this.app=app;
+        this.score = score;
+        this.resetGameCallable = resetGameRunnable;
+        this.secondChanceCallable = secondChanceCallable;
+        this.app = app;
+        this.cacheManager = cacheManager;
         this.hasSecondChance = hasSecondChance;
     }
     
@@ -64,7 +68,7 @@ public class GameOverMenu extends Menu {
         
         if(hasSecondChance) {
             attachElement(secondChanceButton=new GUIButton(
-                    new Coordinate2D(0f,.4f).toVector(),
+                    new Coordinate2D(.325f,.4f).toVector(),
                     new Coordinate2D(.35f, .2f).toVector(),
                     "Second Chance", .4f,
                     guiAppState.getGuiFont(),
@@ -78,17 +82,43 @@ public class GameOverMenu extends Menu {
                 }
             });
 
-            secondChanceButton.centerX();
+            //secondChanceButton.centerX();
         }
+        
+        int bestScore = (int) cacheManager.getCacheBlock("BestScore");
+        boolean isBestScore = score > bestScore;
                 
+        String scoreSentence = "Ouch! Your final score is "+this.score;
+        float scoreTextSize = .5f;
+        
+        if(isBestScore) {
+            scoreSentence += " (NEW BEST!!!)";
+            scoreTextSize = .35f;
+        }
+                    
         attachElement(scoreText=new GUIText(
-                new Coordinate2D(.5f,.75f).toVector(),
-                "Ouch! Your final score is "+this.score, .5f, 
+                new Coordinate2D(.5f,.85f).toVector(),
+                scoreSentence, scoreTextSize, 
                 guiAppState.getGuiFont(), 
                 guiAppState.getGuiConjunctionNode()
         ));
         
         scoreText.centerX();
+        
+        if(isBestScore) {
+            scoreText.getBitmapText().setColor(new ColorRGBA(0f, .95f, .95f, 1f));
+            cacheManager.setCacheBlock("BestScore", score);
+            cacheManager.saveCacheOnFile();
+        } else {
+            attachElement(bestScoreText=new GUIText(
+                    new Coordinate2D(.5f,.7f).toVector(),
+                    "(Current best: " + bestScore + ")", scoreTextSize * .6f, 
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            )); 
+            
+            bestScoreText.centerX();
+        }
         
         attachElement(tipsText=new GUIText(
                 new Coordinate2D(.5f,.25f).toVector(),

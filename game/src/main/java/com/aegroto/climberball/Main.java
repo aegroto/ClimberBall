@@ -123,8 +123,10 @@ public class Main extends SimpleApplication {
             repaired = true;
         }
         
-        if(repaired)
+        if(repaired) {
+            System.out.println("Repaired, saving cache");
             cacheManager.saveCacheOnFile();
+        }
     }
     
     @Override
@@ -164,8 +166,8 @@ public class Main extends SimpleApplication {
         } else if(initSoundAppState) {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
-            soundAppState.setEffectsVolume(1f);
-            soundAppState.setMusicVolume(1f);
+            soundAppState.setEffectsVolume(0f);
+            soundAppState.setMusicVolume(0f);
             
             initSoundAppState=false;
         } else if(initBackgroundAppState) {
@@ -206,7 +208,13 @@ public class Main extends SimpleApplication {
 
             initStartMenu=false;
         } else if(initGameOverMenu) {
-            gameOverMenu=new GameOverMenu(resetGameCallable,secondChanceCallable,this,playerAppState.getScore(),hasSecondChance);               
+            gameOverMenu=new GameOverMenu(
+                    resetGameCallable,
+                    secondChanceCallable,
+                    this,
+                    cacheManager,
+                    playerAppState.getScore(),
+                    hasSecondChance);               
             guiAppState.addMenu(gameOverMenu);
             
             initGameOverMenu=false;
