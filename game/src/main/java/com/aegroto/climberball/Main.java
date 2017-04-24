@@ -2,6 +2,7 @@ package com.aegroto.climberball;
 
 import com.aegroto.climberball.menu.GameOverMenu;
 import com.aegroto.climberball.menu.InGameMenu;
+import com.aegroto.climberball.menu.OptionsMenu;
 import com.aegroto.climberball.menu.StartMenu;
 import com.aegroto.climberball.state.BackgroundAppState;
 import com.aegroto.climberball.state.CacheAppState;
@@ -11,6 +12,7 @@ import com.aegroto.climberball.state.SkinAppState;
 import com.aegroto.climberball.state.SoundAppState;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
+import com.aegroto.gui.GUIButton;
 import com.aegroto.gui.states.GuiAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
@@ -74,6 +76,7 @@ public class Main extends SimpleApplication {
     //MENUS
     private static InGameMenu inGameMenu;
     private static StartMenu startMenu;
+    private static OptionsMenu optionsMenu;
     private static GameOverMenu gameOverMenu;
     
     private static ScheduledThreadPoolExecutor executor;
@@ -195,8 +198,10 @@ public class Main extends SimpleApplication {
         
         //MENUS
         else if(initStartMenu) {
-            startMenu=new StartMenu(resetGameCallable,this);
-            guiAppState.addMenu(startMenu);
+            /*startMenu=new StartMenu(resetGameCallable,this);
+            guiAppState.addMenu(startMenu);*/
+            optionsMenu = new OptionsMenu();
+            guiAppState.addMenu(optionsMenu);
 
             initStartMenu=false;
         } else if(initGameOverMenu) {
