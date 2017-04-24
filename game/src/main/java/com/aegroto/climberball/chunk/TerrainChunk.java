@@ -74,6 +74,9 @@ public abstract class TerrainChunk {
         
         geom=new Geometry("TerrainChunk",p);
         
+        //Material debugMat = mat.clone();
+        //debugMat.setColor("Color", ColorRGBA.randomColor());
+        
         geom.setMaterial(mat);
         
         Vector3f surfaceBaseOffset=new Vector3f(0f,startPoint.y,0f),

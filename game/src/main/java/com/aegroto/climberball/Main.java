@@ -4,6 +4,7 @@ import com.aegroto.climberball.menu.GameOverMenu;
 import com.aegroto.climberball.menu.InGameMenu;
 import com.aegroto.climberball.menu.StartMenu;
 import com.aegroto.climberball.state.BackgroundAppState;
+import com.aegroto.climberball.state.CacheAppState;
 import com.aegroto.climberball.state.EnvironmentAppState;
 import com.aegroto.climberball.state.PlayerAppState;
 import com.aegroto.climberball.state.SkinAppState;
@@ -39,17 +40,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.yaml.snakeyaml.Yaml;
 
-public class Main extends SimpleApplication {    
-    private static CacheManager cacheManager;
+public class Main extends SimpleApplication {  
     
-    public static void initializeCacheManager(String cacheLocation) {
-        cacheManager = new CacheManager(cacheLocation);
+    public static void initializeCacheAppState(String cacheLocation) {        
+        cacheAppState = new CacheAppState(cacheLocation);
     }
     
+    private static CacheAppState cacheAppState;
+    
     public static void main(String[] args) {
-        initializeCacheManager("cache.yaml");
+        initializeCacheAppState("cache.yaml");
         
-        cacheManager.saveCacheOnFile();
+        // cacheManager.saveCacheOnFile();
         
         Main app = new Main();
         AppSettings settings = new AppSettings(true);
@@ -79,7 +81,8 @@ public class Main extends SimpleApplication {
     @Setter private static boolean androidLaunch = false;
     
     private static boolean 
-            //Initialization            
+            //Initialization  
+            initCacheAppState=false,
             initSkinAppState=false,
             initSoundAppState=false,
             initGuiAppState=false,
@@ -116,24 +119,11 @@ public class Main extends SimpleApplication {
         hasSecondChance=false;
     }
     
-    private void checkAndRepairCache(CacheManager cacheManager) {
-        boolean repaired = false;
-        if(cacheManager.getCacheBlock("BestScore") == null) {
-            cacheManager.setCacheBlock("BestScore", 0);
-            repaired = true;
-        }
-        
-        if(repaired) {
-            System.out.println("Repaired, saving cache");
-            cacheManager.saveCacheOnFile();
-        }
-    }
-    
     @Override
     public void simpleInitApp() {
         this.setDisplayStatView(false);
         
-        checkAndRepairCache(cacheManager);
+        // checkAndRepairCache(cacheManager);
         
         inputManager.setSimulateMouse(true);
         
@@ -142,9 +132,11 @@ public class Main extends SimpleApplication {
             assetManager.registerLocator("src/main/resources/_assets", FileLocator.class);
         
         Coordinate2D.init(settings);  
-        Helpers.init(this,new Vector3f(-Coordinate2D.xConvert(.1f),Coordinate2D.yConvert(.5f),0));   
+        Helpers.init(this, new Vector3f(-Coordinate2D.xConvert(.1f),Coordinate2D.yConvert(.5f),0));   
         
         flyCam.setEnabled(false);
+        
+        stateManager.attach(cacheAppState);
         
         initSkinAppState=true; 
         initSoundAppState=true;
@@ -166,8 +158,8 @@ public class Main extends SimpleApplication {
         } else if(initSoundAppState) {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
-            soundAppState.setEffectsVolume(0f);
-            soundAppState.setMusicVolume(0f);
+            soundAppState.setEffectsVolume((float) (double) cacheAppState.getCacheBlock("EffectsVolume"));
+            soundAppState.setMusicVolume((float) (double) cacheAppState.getCacheBlock("MusicVolume"));
             
             initSoundAppState=false;
         } else if(initBackgroundAppState) {
@@ -212,7 +204,7 @@ public class Main extends SimpleApplication {
                     resetGameCallable,
                     secondChanceCallable,
                     this,
-                    cacheManager,
+                    cacheAppState.getCacheManager(),
                     playerAppState.getScore(),
                     hasSecondChance);               
             guiAppState.addMenu(gameOverMenu);

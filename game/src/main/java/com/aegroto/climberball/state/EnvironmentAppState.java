@@ -127,6 +127,7 @@ public final class EnvironmentAppState extends BaseAppState {
     protected void generateChunk() {
         Vector3f startPoint;
         int nextChunkSurface, nextPickupType = 0;
+        
         if(chunkList.size()>0) {
             startPoint=chunkList.getLast().getJointVector();          
             nextChunkSurface=chunkList.getLast().getSurfaceType();
@@ -135,7 +136,8 @@ public final class EnvironmentAppState extends BaseAppState {
             nextChunkSurface=0;
         }
         
-        TerrainChunk newChunk=null;
+        TerrainChunk newChunk = null;
+        
         if(FastMath.nextRandomFloat() > pickupSpawningFactor) {
             nextPickupType=FastMath.nextRandomInt(1, 1);
             
