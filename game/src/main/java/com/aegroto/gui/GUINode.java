@@ -44,7 +44,7 @@ public class GUINode<E extends GUIElement> extends GUIElement{
     }
     
     @Override
-    public void activate(boolean active) { 
+    public void activate(boolean active) {
         this.active=active;
         for(E element:elements) element.activate(active); 
     }

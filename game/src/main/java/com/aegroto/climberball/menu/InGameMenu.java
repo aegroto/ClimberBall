@@ -26,21 +26,28 @@ public final class InGameMenu extends Menu {
     public void onAttach(GuiAppState guiAppState) {
         super.onAttach(guiAppState);
         
-        attachElement(scoreText=new GUIText(
-                new Coordinate2D(.05f,.95f).toVector(),
-                "Score: ", .3f, 
-                guiAppState.getGuiFont(), 
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(scoreText == null) {
+            scoreText=new GUIText(
+                    new Coordinate2D(.05f,.95f).toVector(),
+                    "Score: ", .3f, 
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(infoText=new GUIText(
-                new Coordinate2D(0f,.85f).toVector(),
-                "", .3f,
-                guiAppState.getGuiFont(), 
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(infoText == null) {
+            infoText=new GUIText(
+                    new Coordinate2D(0f,.85f).toVector(),
+                    "", .3f,
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+
+            infoText.centerX();
+        }
         
-        infoText.centerX();
+        attachElement(scoreText);
+        attachElement(infoText);
     }
     
     public void showInfoText(String text) {

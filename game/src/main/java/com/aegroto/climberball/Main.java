@@ -91,6 +91,8 @@ public class Main extends SimpleApplication {
             initGuiAppState=false,
             initBackgroundAppState=false,
             initEnvironmentAppState=false,
+            
+            initOptionsMenu=false,
             initStartMenu=false,
             initPlayerAppState=false,
             initGameOverMenu=false,
@@ -187,9 +189,12 @@ public class Main extends SimpleApplication {
             initPlayerAppState=false;
         } else if(initGuiAppState) {                    
             guiAppState=new GuiAppState(skinAppState.getCurrentSkin().getGuiFont(), guiNode, executor);
-            stateManager.attach(guiAppState);          
+            stateManager.attach(guiAppState); 
             
-            initGuiAppState=false;
+            initGuiAppState=false;          
+            
+            initOptionsMenu=true;
+            initStartMenu=true;
         } else if(resetGame) {
             resetGame();
             
@@ -197,12 +202,16 @@ public class Main extends SimpleApplication {
         }
         
         //MENUS
-        else if(initStartMenu) {
-            /*startMenu=new StartMenu(resetGameCallable,this);
-            guiAppState.addMenu(startMenu);*/
+        else if(initOptionsMenu) {            
             optionsMenu = new OptionsMenu();
-            guiAppState.addMenu(optionsMenu);
+            
+            initOptionsMenu = false;
+        } else if(initStartMenu) {
+            startMenu=new StartMenu(resetGameCallable,this,optionsMenu);
+            guiAppState.addMenu(startMenu);
 
+            optionsMenu.setOnBackMenu(startMenu);
+            
             initStartMenu=false;
         } else if(initGameOverMenu) {
             gameOverMenu=new GameOverMenu(

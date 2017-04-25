@@ -49,22 +49,24 @@ public class GameOverMenu extends Menu {
     public void onAttach(GuiAppState guiAppState) {
         super.onAttach(guiAppState);
         
-        attachElement(background=new GUIButton(
-                new Vector2f(0f,0f),
-                new Coordinate2D(1f, 1f).toVector(),
-                "","alpha_background.png",
-                guiAppState.getGuiFont(),
-                guiAppState.getAssetManager(), 
-                guiAppState.getGuiConjunctionNode(),
-                guiAppState.getInteractiveGUIsList()
-        ) {
-            @Override
-            public void execFunction() {
-                app.enqueue(resetGameCallable);
-            }
-        });
-        
-        background.setZOffset(-1);
+        if(background == null) {
+            background=new GUIButton(
+                    new Vector2f(0f,0f),
+                    new Coordinate2D(1f, 1f).toVector(),
+                    "","alpha_background.png",
+                    guiAppState.getGuiFont(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode(),
+                    guiAppState.getInteractiveGUIsList()
+            ) {
+                @Override
+                public void execFunction() {
+                    app.enqueue(resetGameCallable);
+                }
+            };
+
+            background.setZOffset(-1);
+        }
         
         if(hasSecondChance) {
             attachElement(secondChanceButton=new GUIButton(
@@ -81,8 +83,8 @@ public class GameOverMenu extends Menu {
                     app.enqueue(secondChanceCallable);
                 }
             });
-
-            //secondChanceButton.centerX();
+            
+            attachElement(secondChanceButton);
         }
         
         int bestScore = (int) cacheManager.getCacheBlock("BestScore");
@@ -95,38 +97,50 @@ public class GameOverMenu extends Menu {
             scoreSentence += " (NEW BEST!!!)";
             scoreTextSize = .35f;
         }
-                    
-        attachElement(scoreText=new GUIText(
-                new Coordinate2D(.5f,.85f).toVector(),
-                scoreSentence, scoreTextSize, 
-                guiAppState.getGuiFont(), 
-                guiAppState.getGuiConjunctionNode()
-        ));
         
-        scoreText.centerX();
+        if(scoreText == null) {
+            scoreText=new GUIText(
+                    new Coordinate2D(.5f,.85f).toVector(),
+                    scoreSentence, scoreTextSize, 
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+
+            scoreText.centerX();
+        } 
         
         if(isBestScore) {
             scoreText.getBitmapText().setColor(new ColorRGBA(0f, .95f, .95f, 1f));
             cacheManager.setCacheBlock("BestScore", score);
             cacheManager.saveCacheOnFile();
         } else {
-            attachElement(bestScoreText=new GUIText(
-                    new Coordinate2D(.5f,.7f).toVector(),
-                    "(Current best: " + bestScore + ")", scoreTextSize * .6f, 
-                    guiAppState.getGuiFont(), 
-                    guiAppState.getGuiConjunctionNode()
-            )); 
-            
-            bestScoreText.centerX();
+            if(bestScoreText == null) {
+                bestScoreText=new GUIText(
+                        new Coordinate2D(.5f,.7f).toVector(),
+                        "(Current best: " + bestScore + ")", scoreTextSize * .6f, 
+                        guiAppState.getGuiFont(), 
+                        guiAppState.getGuiConjunctionNode()
+                ); 
+
+                bestScoreText.centerX();  
+                
+                attachElement(bestScoreText);
+            }
         }
         
-        attachElement(tipsText=new GUIText(
-                new Coordinate2D(.5f,.25f).toVector(),
-                "Tap anywhere to retry", .5f, 
-                guiAppState.getGuiFont(), 
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(tipsText == null) {
+            tipsText=new GUIText(
+                    new Coordinate2D(.5f,.25f).toVector(),
+                    "Tap anywhere to retry", .5f, 
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+            
+            tipsText.centerX();
+        }        
         
-        tipsText.centerX();
+        attachElement(scoreText);
+        attachElement(tipsText);
+        attachElement(background);
     }
 }

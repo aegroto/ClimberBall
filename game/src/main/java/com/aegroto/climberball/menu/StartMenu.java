@@ -31,119 +31,170 @@ public class StartMenu extends Menu {
     
     private final GUIImage[] arrow=new GUIImage[3];
     
+    private final OptionsMenu optionsMenu;
+    
     private final Callable resetGameCallable;
     private final SimpleApplication app;
     
-    public StartMenu(Callable resetGameRunnable,SimpleApplication app) {
+    private GUIButton optionsButton;
+    
+    public StartMenu(Callable resetGameRunnable,SimpleApplication app, OptionsMenu optionsMenu) {
         super();
         
         this.resetGameCallable=resetGameRunnable;
         this.app=app;
+        this.optionsMenu = optionsMenu;
     }
     
     @Override
-    public void onAttach(GuiAppState guiAppState) {
+    public void onAttach(final GuiAppState guiAppState) {
         super.onAttach(guiAppState);   
         
-        attachElement(background=new GUIButton(
-                new Vector2f(0f,0f),
-                new Coordinate2D(1f, 1f).toVector(),
-                "","gui/light_background.png",
-                guiAppState.getGuiFont(),
-                guiAppState.getAssetManager(), 
-                guiAppState.getGuiConjunctionNode(),
-                guiAppState.getInteractiveGUIsList()
-        ) {
-            @Override
-            public void execFunction() {
-                app.enqueue(resetGameCallable);
-            }
-        });
+        final StartMenu thisMenu = this;
         
-        attachElement(titleText=new GUIText(
-                new Coordinate2D(.5f, .95f).toVector(),
-                "CLIMBERBALL", .5f, 
-                guiAppState.getGuiFont(), 
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(background == null) {
+            background=new GUIButton(
+                    new Coordinate2D(0f,.2f).toVector(),
+                    new Coordinate2D(1f, .8f).toVector(),
+                    "","gui/light_background.png",
+                    guiAppState.getGuiFont(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode(),
+                    guiAppState.getInteractiveGUIsList()
+            ) {
+                @Override
+                public void execFunction() {
+                    app.enqueue(resetGameCallable);
+                }
+            };
+        }
         
-        titleText.centerX();
+        if(optionsButton == null) {
+            optionsButton=new GUIButton(
+                    new Coordinate2D(0f,.05f).toVector(),
+                    new Coordinate2D(.35f, .15f).toVector(),
+                    "Options", .4f,
+                    guiAppState.getGuiFont(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode(),
+                    guiAppState.getInteractiveGUIsList()
+            ) {
+                @Override
+                public void execFunction() {
+                    guiAppState.removeMenu(thisMenu);
+                    guiAppState.addMenu(optionsMenu);
+                }
+            };
         
-        attachElement(explainationText=new GUIMultipleLineText(
-                new Coordinate2D(0f, .65f).toVector(),
-                  "Switch between the 4 forms (plain,rock,sand,grass) to adapt the terrain \n"
-                + "Pay attention because walking with an unfit form makes you slow,until \n"
-                + "the ball falls into the darkness (game over).",
-                .2f, Coordinate2D.yConvert(.035f),
-                guiAppState.getGuiFont(), 
-                guiAppState.getGuiConjunctionNode()
-        ));
+            optionsButton.centerX();
+        }
+        
+        if(titleText == null) {
+            titleText=new GUIText(
+                    new Coordinate2D(.5f, .95f).toVector(),
+                    "CLIMBERBALL", .5f, 
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+        
+            titleText.centerX();
+        }
+        
+        if(explainationText == null) {
+            explainationText=new GUIMultipleLineText(
+                    new Coordinate2D(0f, .65f).toVector(),
+                      "Switch between the 4 forms (plain,rock,sand,grass) to adapt the terrain \n"
+                    + "Pay attention because walking with an unfit form makes you slow,until \n"
+                    + "the ball falls into the darkness (game over).",
+                    .2f, Coordinate2D.yConvert(.035f),
+                    guiAppState.getGuiFont(), 
+                    guiAppState.getGuiConjunctionNode()
+            );           
+        
+            explainationText.centerX();
+        }
         
         Vector2f imageScale=new Coordinate2D(.06f,.1f).toVector();
         
-        attachElement(ballPlainImage=new GUIImage(
-                new Coordinate2D(.15f,.425f).toVector(),
-                imageScale,
-                "base/ball/core_plain.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(ballPlainImage == null) {
+            ballPlainImage=new GUIImage(
+                    new Coordinate2D(.15f,.425f).toVector(),
+                    imageScale,
+                    "base/ball/core_plain.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(ballRockImage=new GUIImage(
-                new Coordinate2D(.35f,.425f).toVector(),
-                imageScale,
-                "base/ball/core_rock.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(ballRockImage == null) {
+            ballRockImage=new GUIImage(
+                    new Coordinate2D(.35f,.425f).toVector(),
+                    imageScale,
+                    "base/ball/core_rock.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
+
+        if(ballSandImage == null) {
+            ballSandImage=new GUIImage(
+                    new Coordinate2D(.55f,.425f).toVector(),
+                    imageScale,
+                    "base/ball/core_sand.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(ballSandImage=new GUIImage(
-                new Coordinate2D(.55f,.425f).toVector(),
-                imageScale,
-                "base/ball/core_sand.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(ballGrassImage == null) {
+            ballGrassImage=new GUIImage(
+                    new Coordinate2D(.75f,.425f).toVector(),
+                    imageScale,
+                    "base/ball/core_grass.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(ballGrassImage=new GUIImage(
-                new Coordinate2D(.75f,.425f).toVector(),
-                imageScale,
-                "base/ball/core_grass.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(terrainPlainImage == null) {
+            terrainPlainImage=new GUIImage(
+                    new Coordinate2D(.15f,.25f).toVector(),
+                    imageScale,
+                    "base/plain.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(terrainPlainImage=new GUIImage(
-                new Coordinate2D(.15f,.225f).toVector(),
-                imageScale,
-                "base/plain.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(terrainRockImage == null) {
+            terrainRockImage=new GUIImage(
+                    new Coordinate2D(.35f,.25f).toVector(),
+                    imageScale,
+                    "base/rock.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(terrainRockImage=new GUIImage(
-                new Coordinate2D(.35f,.225f).toVector(),
-                imageScale,
-                "base/rock.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(terrainSandImage == null) {
+            terrainSandImage=new GUIImage(
+                    new Coordinate2D(.55f,.25f).toVector(),
+                    imageScale,
+                    "base/sand.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
-        attachElement(terrainSandImage=new GUIImage(
-                new Coordinate2D(.55f,.225f).toVector(),
-                imageScale,
-                "base/sand.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
-        
-        attachElement(terrainGrassImage=new GUIImage(
-                new Coordinate2D(.75f,.225f).toVector(),
-                imageScale,
-                "base/grass.png",
-                guiAppState.getAssetManager(),
-                guiAppState.getGuiConjunctionNode()
-        ));
+        if(terrainGrassImage == null) {
+            terrainGrassImage=new GUIImage(
+                    new Coordinate2D(.75f,.25f).toVector(),
+                    imageScale,
+                    "base/grass.png",
+                    guiAppState.getAssetManager(),
+                    guiAppState.getGuiConjunctionNode()
+            );
+        }
         
         for(int i=0;i<arrow.length;i++) {
             attachElement(arrow[i]=new GUIImage(
@@ -154,6 +205,21 @@ public class StartMenu extends Menu {
                     guiAppState.getGuiConjunctionNode()
             ));
         }
-        explainationText.centerX();
+        
+        attachElement(background);
+        
+        attachElement(optionsButton);
+        
+        attachElement(titleText);
+        attachElement(explainationText);
+        
+        attachElement(ballPlainImage);
+        attachElement(ballRockImage);
+        attachElement(ballSandImage);
+        attachElement(ballGrassImage);
+        attachElement(terrainPlainImage);
+        attachElement(terrainRockImage);
+        attachElement(terrainSandImage);
+        attachElement(terrainGrassImage);
     }
 }
