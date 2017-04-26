@@ -153,7 +153,42 @@ public class Main extends SimpleApplication {
     }
     
     @Override 
-    public void simpleUpdate(float tpf) {        
+    public void simpleUpdate(float tpf) {                
+        //Regular update code here
+        
+        if(stateManager.hasState(playerAppState)) {
+            if(playerAppState.isGameLost()) {                
+                //stateManager.detach(playerAppState);
+                if(!initGameOverMenu && 
+                   !guiAppState.hasMenu(gameOverMenu) &&
+                   !guiAppState.hasMenu(optionsMenu)) initGameOverMenu=true;
+            } else {
+                inGameMenu.setScoreText(playerAppState.getScore());
+            }
+        }
+    }
+    
+    private void resetGame() {    
+        //STATES
+        if(stateManager.hasState(environmentAppState)) stateManager.detach(environmentAppState);
+        if(stateManager.hasState(playerAppState)) stateManager.detach(playerAppState);
+        
+        initEnvironmentAppState=true;
+        initPlayerAppState=true;
+        
+        //HUD RESET
+        if(guiAppState.hasMenu(gameOverMenu)) guiAppState.removeMenu(gameOverMenu);        
+        if(guiAppState.hasMenu(startMenu)) guiAppState.removeMenu(startMenu);
+        if(guiAppState.hasMenu(inGameMenu)) guiAppState.removeMenu(inGameMenu);
+        
+        inGameMenu=new InGameMenu();
+        guiAppState.addMenu(inGameMenu);
+        
+        hasSecondChance = true;
+    }
+
+    @Override
+    public void simpleRender(RenderManager rm) {
         //STATES 
         if(initSkinAppState) {
             skinAppState=new SkinAppState("base");
@@ -163,8 +198,8 @@ public class Main extends SimpleApplication {
         } else if(initSoundAppState) {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
-            soundAppState.setEffectsVolume((float) (double) cacheAppState.getCacheBlock("EffectsVolume"));
-            soundAppState.setMusicVolume((float) (double) cacheAppState.getCacheBlock("MusicVolume"));
+            soundAppState.setEffectsVolume(((Double) cacheAppState.getCacheBlock("EffectsVolume")).floatValue());
+            soundAppState.setMusicVolume(((Double) cacheAppState.getCacheBlock("MusicVolume")).floatValue());
             
             initSoundAppState=false;
         } else if(initBackgroundAppState) {
@@ -209,14 +244,13 @@ public class Main extends SimpleApplication {
         } else if(initStartMenu) {
             startMenu=new StartMenu(resetGameCallable,this,optionsMenu);
             guiAppState.addMenu(startMenu);
-
-            optionsMenu.setOnBackMenu(startMenu);
             
             initStartMenu=false;
         } else if(initGameOverMenu) {
             gameOverMenu=new GameOverMenu(
                     resetGameCallable,
                     secondChanceCallable,
+                    optionsMenu,
                     this,
                     cacheAppState.getCacheManager(),
                     playerAppState.getScore(),
@@ -225,41 +259,6 @@ public class Main extends SimpleApplication {
             
             initGameOverMenu=false;
         } 
-        
-        //Regular update code here
-        
-        if(stateManager.hasState(playerAppState)) {
-            if(playerAppState.isGameLost()) {                
-                //stateManager.detach(playerAppState);
-                if(!initGameOverMenu && !guiAppState.hasMenu(gameOverMenu)) initGameOverMenu=true;
-            } else {
-                inGameMenu.setScoreText(playerAppState.getScore());
-            }
-        }
-    }
-    
-    private void resetGame() {    
-        //STATES
-        if(stateManager.hasState(environmentAppState)) stateManager.detach(environmentAppState);
-        if(stateManager.hasState(playerAppState)) stateManager.detach(playerAppState);
-        
-        initEnvironmentAppState=true;
-        initPlayerAppState=true;
-        
-        //HUD RESET
-        if(guiAppState.hasMenu(gameOverMenu)) guiAppState.removeMenu(gameOverMenu);        
-        if(guiAppState.hasMenu(startMenu)) guiAppState.removeMenu(startMenu);
-        if(guiAppState.hasMenu(inGameMenu)) guiAppState.removeMenu(inGameMenu);
-        
-        inGameMenu=new InGameMenu();
-        guiAppState.addMenu(inGameMenu);
-        
-        hasSecondChance = true;
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
     
     @Override

@@ -55,7 +55,7 @@ public class MainActivity extends Activity /* implements RewardedVideoAdListener
                 (AndroidHarnessFragment) fm.findFragmentById(R.id.jmeFragment); 
         
         Main.setAndroidLaunch(true);
-        Main.initializeCacheManager(getCacheDir().getAbsolutePath()+"/cache"); 
+        Main.initializeCacheAppState(getCacheDir().getAbsolutePath()+"/cache"); 
         
         // 97B98342FB4CF17F648567CD76F539A8
         

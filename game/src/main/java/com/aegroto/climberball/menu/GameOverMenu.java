@@ -24,7 +24,8 @@ import java.util.concurrent.Callable;
 public class GameOverMenu extends Menu {
     private GUIText scoreText,bestScoreText,tipsText;
     private GUIButton background,
-                      secondChanceButton;
+                      secondChanceButton,
+                      optionsButton;
     
     private final int score;
     private final boolean hasSecondChance;
@@ -33,21 +34,27 @@ public class GameOverMenu extends Menu {
     private final SimpleApplication app;
     private final CacheManager cacheManager;
     
-    public GameOverMenu(Callable resetGameRunnable,Callable secondChanceCallable,
+    private final OptionsMenu optionsMenu;
+    
+    public GameOverMenu(Callable resetGameRunnable,Callable secondChanceCallable,OptionsMenu optionsMenu,
                         SimpleApplication app,CacheManager cacheManager, int score,boolean hasSecondChance) {
         super();
         
         this.score = score;
         this.resetGameCallable = resetGameRunnable;
         this.secondChanceCallable = secondChanceCallable;
+        this.optionsMenu = optionsMenu;
         this.app = app;
         this.cacheManager = cacheManager;
         this.hasSecondChance = hasSecondChance;
     }
     
     @Override
-    public void onAttach(GuiAppState guiAppState) {
+    public void onAttach(final GuiAppState guiAppState) {
         super.onAttach(guiAppState);
+        
+        final GameOverMenu thisMenu = this;
+        optionsMenu.setOnBackMenu(thisMenu);
         
         if(background == null) {
             background=new GUIButton(
@@ -69,20 +76,22 @@ public class GameOverMenu extends Menu {
         }
         
         if(hasSecondChance) {
-            attachElement(secondChanceButton=new GUIButton(
-                    new Coordinate2D(.325f,.4f).toVector(),
-                    new Coordinate2D(.35f, .2f).toVector(),
-                    "Second Chance", .4f,
-                    guiAppState.getGuiFont(),
-                    guiAppState.getAssetManager(), 
-                    guiAppState.getGuiConjunctionNode(),
-                    guiAppState.getInteractiveGUIsList()
-            ) {
-                @Override
-                public void execFunction() {
-                    app.enqueue(secondChanceCallable);
-                }
-            });
+            if(secondChanceButton == null) {
+                secondChanceButton=new GUIButton(
+                        new Coordinate2D(.325f,.45f).toVector(),
+                        new Coordinate2D(.35f, .15f).toVector(),
+                        "Second Chance", .4f,
+                        guiAppState.getGuiFont(),
+                        guiAppState.getAssetManager(), 
+                        guiAppState.getGuiConjunctionNode(),
+                        guiAppState.getInteractiveGUIsList()
+                ) {
+                    @Override
+                    public void execFunction() {
+                        app.enqueue(secondChanceCallable);
+                    }
+                };
+            }
             
             attachElement(secondChanceButton);
         }
@@ -137,10 +146,31 @@ public class GameOverMenu extends Menu {
             );
             
             tipsText.centerX();
-        }        
+        }       
+                
+        if(optionsButton == null) {
+            optionsButton=new GUIButton(
+                    new Coordinate2D(.325f,.25f).toVector(),
+                    new Coordinate2D(.35f, .15f).toVector(),
+                    "Options", .4f,
+                    guiAppState.getGuiFont(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode(),
+                    guiAppState.getInteractiveGUIsList()
+            ) {
+                @Override
+                public void execFunction() {
+                    guiAppState.removeMenu(thisMenu);
+                    guiAppState.addMenu(optionsMenu);
+                }
+            };
+        }
+        
+        attachElement(background);
+        
+        attachElement(optionsButton);      
         
         attachElement(scoreText);
         attachElement(tipsText);
-        attachElement(background);
     }
 }

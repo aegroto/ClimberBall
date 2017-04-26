@@ -51,6 +51,7 @@ public class StartMenu extends Menu {
         super.onAttach(guiAppState);   
         
         final StartMenu thisMenu = this;
+        optionsMenu.setOnBackMenu(thisMenu);
         
         if(background == null) {
             background=new GUIButton(
