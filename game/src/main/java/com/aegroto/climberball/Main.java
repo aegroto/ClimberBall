@@ -83,7 +83,29 @@ public class Main extends SimpleApplication {
 
     @Setter private static boolean androidLaunch = false;
     
-    private static boolean 
+    public static final class UpdateSwitches {
+        public static boolean
+            initCacheAppState=false,
+            initSkinAppState=false,
+            initSoundAppState=false,
+            initGuiAppState=false,
+            initBackgroundAppState=false,
+            initEnvironmentAppState=false,
+            
+            initOptionsMenu=false,
+            initStartMenu=false,
+            initPlayerAppState=false,
+            initGameOverMenu=false,
+            //Various
+            resetGame=false,
+            hasSecondChance=true,
+        
+            loadOptions=false;
+    }
+    
+    @Getter private static final UpdateSwitches UPDATE_SWITCHES = new UpdateSwitches();
+    
+    /*private static boolean 
             //Initialization  
             initCacheAppState=false,
             initSkinAppState=false,
@@ -100,12 +122,15 @@ public class Main extends SimpleApplication {
             resetGame=false,
             hasSecondChance=true;
     
+    private @Setter static boolean
+            loadOptions=false;*/
+    
     //private SimpleApplication app;
     
     private final Callable resetGameCallable=new Callable<Object>() {
         @Override
         public Object call() {                
-            resetGame = true;
+            UPDATE_SWITCHES.resetGame = true;
             return null;
         }
     };
@@ -121,7 +146,7 @@ public class Main extends SimpleApplication {
     private static void useSecondChance() {
         playerAppState.useSecondChance();
         guiAppState.removeMenu(gameOverMenu);
-        hasSecondChance=false;
+        UPDATE_SWITCHES.hasSecondChance=false;
     }
     
     @Override
@@ -143,13 +168,14 @@ public class Main extends SimpleApplication {
         
         stateManager.attach(cacheAppState);
         
-        initSkinAppState=true; 
-        initSoundAppState=true;
-        initGuiAppState=true;
-        initBackgroundAppState=true;
-        initEnvironmentAppState=true;
-        initStartMenu=true;
-        //initGameOverMenu=true;
+        UPDATE_SWITCHES.initSkinAppState=true; 
+        UPDATE_SWITCHES.initSoundAppState=true;
+        UPDATE_SWITCHES.initGuiAppState=true;
+        UPDATE_SWITCHES.initBackgroundAppState=true;
+        UPDATE_SWITCHES.initEnvironmentAppState=true;
+        UPDATE_SWITCHES.initStartMenu=true;
+        
+        UPDATE_SWITCHES.loadOptions=true;
     }
     
     @Override 
@@ -159,9 +185,9 @@ public class Main extends SimpleApplication {
         if(stateManager.hasState(playerAppState)) {
             if(playerAppState.isGameLost()) {                
                 //stateManager.detach(playerAppState);
-                if(!initGameOverMenu && 
+                if(!UPDATE_SWITCHES.initGameOverMenu && 
                    !guiAppState.hasMenu(gameOverMenu) &&
-                   !guiAppState.hasMenu(optionsMenu)) initGameOverMenu=true;
+                   !guiAppState.hasMenu(optionsMenu)) UPDATE_SWITCHES.initGameOverMenu=true;
             } else {
                 inGameMenu.setScoreText(playerAppState.getScore());
             }
@@ -173,8 +199,8 @@ public class Main extends SimpleApplication {
         if(stateManager.hasState(environmentAppState)) stateManager.detach(environmentAppState);
         if(stateManager.hasState(playerAppState)) stateManager.detach(playerAppState);
         
-        initEnvironmentAppState=true;
-        initPlayerAppState=true;
+        UPDATE_SWITCHES.initEnvironmentAppState=true;
+        UPDATE_SWITCHES.initPlayerAppState=true;
         
         //HUD RESET
         if(guiAppState.hasMenu(gameOverMenu)) guiAppState.removeMenu(gameOverMenu);        
@@ -184,35 +210,33 @@ public class Main extends SimpleApplication {
         inGameMenu=new InGameMenu();
         guiAppState.addMenu(inGameMenu);
         
-        hasSecondChance = true;
+        UPDATE_SWITCHES.hasSecondChance = true;
     }
 
     @Override
     public void simpleRender(RenderManager rm) {
         //STATES 
-        if(initSkinAppState) {
+        if(UPDATE_SWITCHES.initSkinAppState) {
             skinAppState=new SkinAppState("base");
             stateManager.attach(skinAppState); 
             
-            initSkinAppState=false;
-        } else if(initSoundAppState) {
+            UPDATE_SWITCHES.initSkinAppState=false;
+        } else if(UPDATE_SWITCHES.initSoundAppState) {
             soundAppState=new SoundAppState(guiNode,skinAppState.getCurrentSkinName());
             stateManager.attach(soundAppState); 
-            soundAppState.setEffectsVolume(((Double) cacheAppState.getCacheBlock("EffectsVolume")).floatValue());
-            soundAppState.setMusicVolume(((Double) cacheAppState.getCacheBlock("MusicVolume")).floatValue());
             
-            initSoundAppState=false;
-        } else if(initBackgroundAppState) {
+            UPDATE_SWITCHES.initSoundAppState=false;
+        } else if(UPDATE_SWITCHES.initBackgroundAppState) {
             backgroundAppState = new BackgroundAppState(guiNode, skinAppState.getCurrentSkin());
             stateManager.attach(backgroundAppState);
             
-            initBackgroundAppState=false;
-        } else if(initEnvironmentAppState) {
+            UPDATE_SWITCHES.initBackgroundAppState=false;
+        } else if(UPDATE_SWITCHES.initEnvironmentAppState) {
             environmentAppState=new EnvironmentAppState(guiNode,executor,skinAppState.getCurrentSkin());
             stateManager.attach(environmentAppState);
             
-            initEnvironmentAppState=false;
-        } else if(initPlayerAppState) {
+            UPDATE_SWITCHES.initEnvironmentAppState=false;
+        } else if(UPDATE_SWITCHES.initPlayerAppState) {
             playerAppState=new PlayerAppState(guiNode,
                                               executor,
                                               environmentAppState.getChunkList(),
@@ -221,32 +245,33 @@ public class Main extends SimpleApplication {
                                               skinAppState.getCurrentSkin());
             stateManager.attach(playerAppState);
             
-            initPlayerAppState=false;
-        } else if(initGuiAppState) {                    
+            UPDATE_SWITCHES.initPlayerAppState=false;
+        } else if(UPDATE_SWITCHES.initGuiAppState) {                    
             guiAppState=new GuiAppState(skinAppState.getCurrentSkin().getGuiFont(), guiNode, executor);
             stateManager.attach(guiAppState); 
             
-            initGuiAppState=false;          
+            UPDATE_SWITCHES.initGuiAppState = false;          
             
-            initOptionsMenu=true;
-            initStartMenu=true;
-        } else if(resetGame) {
+            UPDATE_SWITCHES.initOptionsMenu = true;
+            UPDATE_SWITCHES.initStartMenu = true;
+            UPDATE_SWITCHES.loadOptions = true;
+        } else if(UPDATE_SWITCHES.resetGame) {
             resetGame();
             
-            resetGame=false;
+            UPDATE_SWITCHES.resetGame=false;
         }
         
         //MENUS
-        else if(initOptionsMenu) {            
-            optionsMenu = new OptionsMenu();
+        else if(UPDATE_SWITCHES.initOptionsMenu) {            
+            optionsMenu = new OptionsMenu(cacheAppState.getCacheManager());
             
-            initOptionsMenu = false;
-        } else if(initStartMenu) {
+            UPDATE_SWITCHES.initOptionsMenu = false;
+        } else if(UPDATE_SWITCHES.initStartMenu) {
             startMenu=new StartMenu(resetGameCallable,this,optionsMenu);
             guiAppState.addMenu(startMenu);
             
-            initStartMenu=false;
-        } else if(initGameOverMenu) {
+            UPDATE_SWITCHES.initStartMenu=false;
+        } else if(UPDATE_SWITCHES.initGameOverMenu) {
             gameOverMenu=new GameOverMenu(
                     resetGameCallable,
                     secondChanceCallable,
@@ -254,12 +279,25 @@ public class Main extends SimpleApplication {
                     this,
                     cacheAppState.getCacheManager(),
                     playerAppState.getScore(),
-                    hasSecondChance);               
+                    UPDATE_SWITCHES.hasSecondChance);               
             guiAppState.addMenu(gameOverMenu);
             
-            initGameOverMenu=false;
-        } 
-    }
+            UPDATE_SWITCHES.initGameOverMenu=false;
+        } else if(UPDATE_SWITCHES.loadOptions) { 
+            double effectsVolume = 0, musicVolume = 0;
+            
+            if(cacheAppState.getCacheBlock("EffectsVolume") instanceof Float) {
+                effectsVolume = (float) cacheAppState.getCacheBlock("EffectsVolume");
+                musicVolume = (float) cacheAppState.getCacheBlock("MusicVolume");
+            } else if(cacheAppState.getCacheBlock("EffectsVolume") instanceof Double) {
+                effectsVolume = (double) cacheAppState.getCacheBlock("EffectsVolume");
+                musicVolume = (double) cacheAppState.getCacheBlock("MusicVolume");
+            }
+            
+            soundAppState.setEffectsVolume(effectsVolume);
+            soundAppState.setMusicVolume(musicVolume);
+        }
+     }
     
     @Override
     public void destroy() {

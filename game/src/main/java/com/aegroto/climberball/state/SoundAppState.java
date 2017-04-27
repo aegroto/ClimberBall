@@ -23,7 +23,7 @@ public final class SoundAppState extends BaseAppState {
     private final Node rootNode;
     private final HashMap<String,AudioNode> soundList=new HashMap();
     
-    @Getter private float musicVolume=1f,effectsVolume=1f;
+    @Getter private float musicVolume=0f,effectsVolume=0f;
     
     public SoundAppState(Node rootNode,String skinName) {
         this.rootNode=rootNode;
@@ -35,7 +35,7 @@ public final class SoundAppState extends BaseAppState {
         AudioNode background=new AudioNode(app.getAssetManager(), soundFolder+"music_background.ogg");
         background.setPositional(false);
         background.setLooping(true);
-        background.setVolume(musicVolume);
+        background.setVolume((float) musicVolume);
         soundList.put("music_background", background);
         
         rootNode.attachChild(soundList.get("music_background"));
@@ -75,22 +75,22 @@ public final class SoundAppState extends BaseAppState {
         playSound("music_background");
     }
     
-    public void setMusicVolume(float musicVolume) {
-        this.musicVolume=musicVolume;
+    public void setMusicVolume(double musicVolume) {
+        this.musicVolume = (float) musicVolume;
         
         for(String soundKey:soundList.keySet()) {
             if(soundKey.split("_")[0].equals("music")) 
-                soundList.get(soundKey).setVolume(musicVolume);
+                soundList.get(soundKey).setVolume(this.musicVolume);
         }
     }
     
-    public void setEffectsVolume(float effectsVolume) {
-        this.effectsVolume=effectsVolume;
+    public void setEffectsVolume(double effectsVolume) {
+        this.effectsVolume = (float) effectsVolume;
         
         for(String soundKey:soundList.keySet()) {
             if(soundKey.split("_")[0].equals("effect")) 
                 soundList.get(soundKey).setVolume(
-                        (float) soundList.get(soundKey).getUserData("RelativeVolume")*effectsVolume);
+                        (float) soundList.get(soundKey).getUserData("RelativeVolume") * this.effectsVolume);
         }
     }
 

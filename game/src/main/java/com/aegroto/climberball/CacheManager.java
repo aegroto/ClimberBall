@@ -63,7 +63,6 @@ public class CacheManager {
             FileWriter writer = new FileWriter(cacheFile);            
             yaml.dump(cacheBlocks, writer);            
             writer.close();
-            System.out.println("Saved cache");
         } catch(IOException e) {
             return false;
         }

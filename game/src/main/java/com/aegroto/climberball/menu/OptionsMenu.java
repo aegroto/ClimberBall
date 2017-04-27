@@ -5,6 +5,8 @@
  */
 package com.aegroto.climberball.menu;
 
+import com.aegroto.climberball.CacheManager;
+import com.aegroto.climberball.Main.UpdateSwitches;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.gui.GUIButton;
 import com.aegroto.gui.GUICheckbox;
@@ -30,6 +32,12 @@ public class OptionsMenu extends Menu {
                         effectsCheckbox;
     
     @Setter private Menu onBackMenu;
+    
+    private CacheManager cacheManager;
+    
+    public OptionsMenu(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
     
     @Override
     public void onAttach(final GuiAppState guiAppState) {
@@ -59,6 +67,16 @@ public class OptionsMenu extends Menu {
                 @Override
                 public void execFunction() {
                     guiAppState.removeMenu(thisMenu);
+                    
+                    float musicVolumeValue = musicCheckbox.isChecked() ? 1f : 0f;
+                    float effectsVolumeValue = effectsCheckbox.isChecked() ? 1f : 0f;
+                    
+                    cacheManager.setCacheBlock("MusicVolume", musicVolumeValue);
+                    cacheManager.setCacheBlock("EffectsVolume", effectsVolumeValue);
+                    cacheManager.saveCacheOnFile();
+                    
+                    UpdateSwitches.loadOptions = true;
+                    
                     guiAppState.addMenu(onBackMenu);
                 }
             };
@@ -75,6 +93,15 @@ public class OptionsMenu extends Menu {
             );
         }
         
+        /*double effectsVolume = 0, musicVolume = 0;
+        if(cacheManager.getCacheBlock("EffectsVolume") instanceof Float) {
+                effectsVolume = (float) cacheManager.getCacheBlock("EffectsVolume");
+                musicVolume = (float) cacheManager.getCacheBlock("MusicVolume");
+        } else if(cacheManager.getCacheBlock("EffectsVolume") instanceof Double) {
+                effectsVolume = (double) cacheManager.getCacheBlock("EffectsVolume");
+                musicVolume = (double) cacheManager.getCacheBlock("MusicVolume");
+        }*/
+        
         if(musicCheckbox == null) {
             musicCheckbox=new GUICheckbox(
                 new Coordinate2D(.8f,.65f).toVector(),
@@ -85,8 +112,9 @@ public class OptionsMenu extends Menu {
             );
 
             musicCheckbox.centerX();
+            //musicCheckbox.setChecked(effectsVolume == 1f);
         }
-        
+         
         if(effectsText == null) {
             effectsText=new GUIText(
                     new Coordinate2D(.075f, .6f).toVector(),
