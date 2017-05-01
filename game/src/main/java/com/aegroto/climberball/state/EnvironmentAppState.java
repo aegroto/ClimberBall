@@ -53,10 +53,14 @@ public final class EnvironmentAppState extends BaseAppState {
     
     protected float 
             xBarrage,
+            
             speed,
+            speedVariationEnhancer,
+            
             pickupSpawningFactor,
             pickupSpawningVariation,
             pickupSpawningVariationEnhancer,
+            
             changeSurfaceTypeFactor,
             changeSurfaceVariation,
             changeSurfaceVariationEnhancer;
@@ -86,7 +90,9 @@ public final class EnvironmentAppState extends BaseAppState {
     @Override
     protected void onEnable() {
         xBarrage=-Helpers.getTerrainChunkSize();
+        
         speed=Helpers.INITIAL_SPEED;
+        speedVariationEnhancer = 0f;
         
         pickupSpawningFactor=10f;
         pickupSpawningVariation=Helpers.INITIAL_PICKUP_SPAWNING_VARIATION;  
@@ -185,27 +191,6 @@ public final class EnvironmentAppState extends BaseAppState {
     
     private boolean keepUpdating=true;
     
-    /*private final Runnable asynchronousTick=new Runnable() {
-        @Override
-        public void run() {
-            xBarrage+=speed;
-            
-            getApplication().enqueue(new Callable<Object>() {
-                @Override
-                public Object call() {
-                    terrainNode.setLocalTranslation(terrainNode.getLocalTranslation().x-speed, 0f, 5f);
-                    return null;
-                }
-            });
-            
-            try {
-                chunkList.getFirst().checkForBarrage(xBarrage);
-            } catch(NoSuchElementException e) { generateChunk(); }
-            
-            if(keepUpdating) executor.schedule(this, Helpers.UPDATE_TIME, TimeUnit.MILLISECONDS);
-        }            
-    };*/
-    
     @Override
     public void update(float tpf) {
         TerrainChunk first=chunkList.getFirst();
@@ -227,6 +212,8 @@ public final class EnvironmentAppState extends BaseAppState {
         
         if(toBeRemovedPickup != null) 
             pickupList.remove(toBeRemovedPickup);
+        
+        speed *= (Helpers.SPEED_VARIATION + Helpers.SPEED_VARIATION_ENHANCING);
         
         xBarrage += speed;
             

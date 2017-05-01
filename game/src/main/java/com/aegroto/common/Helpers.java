@@ -38,6 +38,8 @@ public final class Helpers {
     
     public static final float 
             INITIAL_SPEED=3.00f,
+            SPEED_VARIATION=1.001f,
+            SPEED_VARIATION_ENHANCING=0.00005f,
             
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
             CHANGE_SURFACE_VARIATION_ENHANCING=.002f,
