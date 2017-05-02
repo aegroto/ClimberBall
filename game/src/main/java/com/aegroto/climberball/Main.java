@@ -245,6 +245,8 @@ public class Main extends SimpleApplication {
                                               skinAppState.getCurrentSkin());
             stateManager.attach(playerAppState);
             
+            environmentAppState.setPlayerAppState(playerAppState);
+            
             UPDATE_SWITCHES.initPlayerAppState=false;
         } else if(UPDATE_SWITCHES.initGuiAppState) {                    
             guiAppState=new GuiAppState(skinAppState.getCurrentSkin().getGuiFont(), guiNode, executor);

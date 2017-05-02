@@ -37,6 +37,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -51,11 +52,14 @@ public final class EnvironmentAppState extends BaseAppState {
     
     protected Skin skin;
     
+    @Setter protected PlayerAppState playerAppState = null;
+    
     protected float 
             xBarrage,
             
             speed,
             speedVariationEnhancer,
+            maxSpeed,
             
             pickupSpawningFactor,
             pickupSpawningVariation,
@@ -65,7 +69,7 @@ public final class EnvironmentAppState extends BaseAppState {
             changeSurfaceVariation,
             changeSurfaceVariationEnhancer;
     
-    public EnvironmentAppState(Node rootNode,ScheduledThreadPoolExecutor executor,Skin skin) {
+    public EnvironmentAppState(Node rootNode, ScheduledThreadPoolExecutor executor, Skin skin) {
         this.rootNode=rootNode;        
         this.executor=executor;
         this.skin=skin;
@@ -91,7 +95,8 @@ public final class EnvironmentAppState extends BaseAppState {
     protected void onEnable() {
         xBarrage=-Helpers.getTerrainChunkSize();
         
-        speed=Helpers.INITIAL_SPEED;
+        speed = Helpers.INITIAL_SPEED;
+        maxSpeed = Helpers.INITIAL_MAX_SPEED;
         speedVariationEnhancer = 0f;
         
         pickupSpawningFactor=10f;
@@ -105,11 +110,10 @@ public final class EnvironmentAppState extends BaseAppState {
         //executor.execute(asynchronousTick);
         rootNode.attachChild(terrainNode);
         int initialChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f);
-
         
         while(chunkList.size()<initialChunks) { 
             generateChunk();
-        }
+        }      
     }
     
     @Override
@@ -189,7 +193,14 @@ public final class EnvironmentAppState extends BaseAppState {
         changeSurfaceVariation*=2;
     }
     
-    private boolean keepUpdating=true;
+    void checkMaxSpeed(float score) {
+        if(score >= 350f)
+            maxSpeed = 6f;
+        else if(score >= 200f)
+            maxSpeed = 5f;
+        else if(score >= 100f)
+            maxSpeed = 4f;        
+    }
     
     @Override
     public void update(float tpf) {
@@ -213,7 +224,12 @@ public final class EnvironmentAppState extends BaseAppState {
         if(toBeRemovedPickup != null) 
             pickupList.remove(toBeRemovedPickup);
         
-        speed *= (Helpers.SPEED_VARIATION + Helpers.SPEED_VARIATION_ENHANCING);
+        if(playerAppState != null) {
+            checkMaxSpeed(playerAppState.getScore());
+        }
+        
+        if(speed < maxSpeed)         
+            speed *= (Helpers.SPEED_VARIATION + Helpers.SPEED_VARIATION_ENHANCING);
         
         xBarrage += speed;
             

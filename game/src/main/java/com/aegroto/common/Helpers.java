@@ -37,7 +37,8 @@ public final class Helpers {
     public static final int UPDATE_TIME=10;
     
     public static final float 
-            INITIAL_SPEED=3.00f,
+            INITIAL_SPEED = 3.00f,
+            INITIAL_MAX_SPEED = 3.50f,
             SPEED_VARIATION=1.001f,
             SPEED_VARIATION_ENHANCING=0.00005f,
             
