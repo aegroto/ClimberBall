@@ -154,7 +154,11 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         ball.update(tpf);
         
         if (!gameLost) {
-            final TerrainChunk chunk = chunkList.get((int) (ball.getPos().x / Helpers.getTerrainChunkSize()) + 1);
+            final TerrainChunk chunk;
+            if(ball.getPos().x >= 0) 
+                chunk = chunkList.get((int) (ball.getPos().x / Helpers.getTerrainChunkSize()));
+            else 
+                chunk = chunkList.getFirst();
             
             ball.setXSpeed(chunk.elaborateSpeedOnSurface(ball.getXSpeed(), ball.getCurrentForm()));
 

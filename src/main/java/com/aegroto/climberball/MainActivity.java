@@ -22,7 +22,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import java.io.File;
  
-public class MainActivity extends Activity /* implements RewardedVideoAdListener */ {
+public class MainActivity extends Activity implements RewardedVideoAdListener {
     /*
      * Note that you can ignore the errors displayed in this file,
      * the android project will build regardless.
@@ -31,6 +31,7 @@ public class MainActivity extends Activity /* implements RewardedVideoAdListener
      */
  
     private final String APP_ID = "ca-app-pub-1805400128871765~2679350737",
+                         //rewardedVideoUnitId="ca-app-pub-3940256099942544/5224354917";
                          rewardedVideoUnitId="ca-app-pub-1805400128871765/5910819939";
     
     private RewardedVideoAd rewardedVideoAd;
@@ -59,13 +60,11 @@ public class MainActivity extends Activity /* implements RewardedVideoAdListener
         
         // 97B98342FB4CF17F648567CD76F539A8
         
-        /* MobileAds.initialize(this, APP_ID);        
-        
         rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-        rewardedVideoAd.setRewardedVideoAdListener(this);
+        rewardedVideoAd.setRewardedVideoAdListener(this);       
         
-        Main.setAndroidLaunch(true);
-        Main.initializeCacheManager(getCacheDir().getAbsolutePath()+"/cache"); 
+        //MobileAds.initialize(this, APP_ID);      
+        
         loadRewardedVideoAd();
         
         Main.setSecondChanceCallable(new Callable<Object>() {
@@ -79,32 +78,32 @@ public class MainActivity extends Activity /* implements RewardedVideoAdListener
                 });
                 return null;
             }
-        }); */
+        }); 
 
         // uncomment the next line to add the default android profiler to the project
         //jmeFragment.getJmeApplication().setAppProfiler(new DefaultAndroidProfiler());
     }
     
     private void loadRewardedVideoAd() {
+        System.err.println("[ADS] Loading rewarded video");
         if (!rewardedVideoAd.isLoaded()) 
             rewardedVideoAd.loadAd(rewardedVideoUnitId, new AdRequest.Builder()
-                    .addTestDevice("97B98342FB4CF17F648567CD76F539A8")
+                    //.addTestDevice("97B98342FB4CF17F648567CD76F539A8")
                     .build());
-        System.err.println("[ADS] Loading rewarded video");
     }
     
     private void showRewardedVideo() {        
         System.err.println("[ADS] Showing rewarded video");
         if (rewardedVideoAd.isLoaded()) {
-            rewardedVideoAd.show();
             System.err.println("[ADS] Showed rewarded video");
+            rewardedVideoAd.show();            
         } else {
-            loadRewardedVideoAd();
             System.err.println("[ADS] Unable to show rewarded video, loading a new one...");
+            loadRewardedVideoAd();            
         }
     }
     
-    /* @Override
+    @Override
     public void onRewardedVideoAdLeftApplication() {
         System.out.println("[ADS] onRewardedVideoAdLeftApplication");
     }
@@ -159,7 +158,7 @@ public class MainActivity extends Activity /* implements RewardedVideoAdListener
     public void onDestroy() {
         rewardedVideoAd.destroy(this);
         super.onDestroy();
-    } */
+    }
 
     public static class JmeFragment extends AndroidHarnessFragment {
         public JmeFragment() {

@@ -17,6 +17,7 @@ import com.jme3.scene.Node;
 import java.util.LinkedList;
 import com.aegroto.climberball.chunk.TerrainChunk;
 import com.aegroto.climberball.entity.pickup.EntityPickup;
+import com.aegroto.climberball.entity.pickup.EntityPickupSmoother;
 import com.aegroto.climberball.entity.pickup.EntityPickupSpeed;
 import com.aegroto.climberball.skin.Skin;
 import com.aegroto.common.Coordinate2D;
@@ -30,6 +31,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.concurrent.Callable;
@@ -49,6 +51,8 @@ public final class EnvironmentAppState extends BaseAppState {
     @Getter protected LinkedList<TerrainChunk> chunkList;
     @Getter protected ArrayList<EntityPickup> pickupList;
     protected ScheduledThreadPoolExecutor executor;
+    
+    protected Stack<Integer> chunkGenerationQueue;
     
     protected Skin skin;
     
@@ -70,12 +74,13 @@ public final class EnvironmentAppState extends BaseAppState {
             changeSurfaceVariationEnhancer;
     
     public EnvironmentAppState(Node rootNode, ScheduledThreadPoolExecutor executor, Skin skin) {
-        this.rootNode=rootNode;        
-        this.executor=executor;
-        this.skin=skin;
+        this.rootNode = rootNode;        
+        this.executor = executor;
+        this.skin = skin;
         
-        this.chunkList=new LinkedList();  
-        this.pickupList=new ArrayList();
+        this.chunkList = new LinkedList();  
+        this.pickupList = new ArrayList();
+        this.chunkGenerationQueue = new Stack<Integer>();
     }
     
     @Override
@@ -107,13 +112,14 @@ public final class EnvironmentAppState extends BaseAppState {
         changeSurfaceVariation=Helpers.INITIAL_CHANGE_SURFACE_VARIATION;  
         changeSurfaceVariationEnhancer=0f;
                 
-        //executor.execute(asynchronousTick);
         rootNode.attachChild(terrainNode);
-        int initialChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f);
+        int initialChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f) + 1;
         
         while(chunkList.size()<initialChunks) { 
-            generateChunk();
-        }      
+            generateChunk(nextChunkSurface());
+        }
+        
+        // queueChunkGeneration(initialChunks, -1);
     }
     
     @Override
@@ -134,27 +140,8 @@ public final class EnvironmentAppState extends BaseAppState {
         }        
     }
     
-    protected void generateChunk() {
-        Vector3f startPoint;
-        int nextChunkSurface, nextPickupType = 0;
-        
-        if(chunkList.size()>0) {
-            startPoint=chunkList.getLast().getJointVector();          
-            nextChunkSurface=chunkList.getLast().getSurfaceType();
-        } else {
-            startPoint=Helpers.getStartVector();
-            nextChunkSurface=0;
-        }
-        
-        TerrainChunk newChunk = null;
-        
-        if(FastMath.nextRandomFloat() > pickupSpawningFactor) {
-            nextPickupType=FastMath.nextRandomInt(1, 1);
-            
-            pickupSpawningVariation=Helpers.INITIAL_PICKUP_SPAWNING_VARIATION-pickupSpawningVariationEnhancer;            
-            pickupSpawningFactor=1f;
-            pickupSpawningVariationEnhancer-=Helpers.PICKUP_SPAWNING_VARIATION_ENHANCING;
-        }
+    protected int nextChunkSurface() {
+        int nextChunkSurface;
         
         if(FastMath.nextRandomFloat() > changeSurfaceTypeFactor) {
             nextChunkSurface=FastMath.nextRandomInt(0,3);
@@ -162,6 +149,36 @@ public final class EnvironmentAppState extends BaseAppState {
             changeSurfaceVariation=Helpers.INITIAL_CHANGE_SURFACE_VARIATION-changeSurfaceVariationEnhancer;            
             changeSurfaceTypeFactor=1f;
             changeSurfaceVariationEnhancer-=Helpers.CHANGE_SURFACE_VARIATION_ENHANCING;
+        } else {
+            if(chunkList.size()>0) {        
+                nextChunkSurface=chunkList.getLast().getSurfaceType();
+            } else {
+                nextChunkSurface=0;
+            }            
+        }
+        
+        return nextChunkSurface;
+        // generateChunk(nextChunkSurface);
+    }
+    
+    protected void generateChunk(int nextChunkSurface) {
+        Vector3f startPoint;
+        int nextPickupType = 0;
+        
+        if(chunkList.size()>0) {
+            startPoint=chunkList.getLast().getJointVector();          
+        } else {
+            startPoint=Helpers.getStartVector();
+        }
+        
+        TerrainChunk newChunk = null;
+        
+        if(FastMath.nextRandomFloat() > pickupSpawningFactor) {
+            nextPickupType=FastMath.nextRandomInt(1, 2);
+            
+            pickupSpawningVariation=Helpers.INITIAL_PICKUP_SPAWNING_VARIATION-pickupSpawningVariationEnhancer;            
+            pickupSpawningFactor=1f;
+            pickupSpawningVariationEnhancer-=Helpers.PICKUP_SPAWNING_VARIATION_ENHANCING;
         }
         
         switch(nextChunkSurface) {
@@ -183,7 +200,11 @@ public final class EnvironmentAppState extends BaseAppState {
         switch(nextPickupType) {
             case 0: break;
             case 1: 
-                pickupList.add(new EntityPickupSpeed(terrainNode,newChunk.getJointVector(),skin,getApplication().getAssetManager())); break;
+                pickupList.add(new EntityPickupSpeed(terrainNode, newChunk.getJointVector(), skin, getApplication().getAssetManager())); 
+                break;
+            case 2:
+                pickupList.add(new EntityPickupSmoother(terrainNode, newChunk.getJointVector(), this, skin, getApplication().getAssetManager())); 
+                break;                 
         }
         
         pickupSpawningFactor-= pickupSpawningVariation;
@@ -193,22 +214,37 @@ public final class EnvironmentAppState extends BaseAppState {
         changeSurfaceVariation*=2;
     }
     
-    void checkMaxSpeed(float score) {
+    public void queueChunkGeneration(int n, int surfaceType) {
+        if(surfaceType == -1) {
+            for(int i = 0; i < n; i++) 
+                chunkGenerationQueue.push(nextChunkSurface());
+        } else {
+            for(int i = 0; i < n; i++) 
+                chunkGenerationQueue.push(surfaceType);
+        }
+    }
+    
+    protected void checkMaxSpeed(float score) {
         if(score >= 350f)
-            maxSpeed = 6f;
+            maxSpeed = 8f;
         else if(score >= 200f)
-            maxSpeed = 5f;
-        else if(score >= 100f)
-            maxSpeed = 4f;        
+            maxSpeed = 7f;
+        else if(score >= 50f)
+            maxSpeed = 5.5f;        
     }
     
     @Override
     public void update(float tpf) {
+        if(!chunkGenerationQueue.isEmpty()) {
+            generateChunk(chunkGenerationQueue.pop());
+        }
+        
         TerrainChunk first=chunkList.getFirst();
         
         if(first.isDestroyed()) {
             first.destroy();
-            generateChunk();
+            // generateChunk();
+            queueChunkGeneration(1, -1);
             chunkList.removeFirst();
         }
         
@@ -237,6 +273,8 @@ public final class EnvironmentAppState extends BaseAppState {
 
         try {
             chunkList.getFirst().checkForBarrage(xBarrage);
-        } catch(NoSuchElementException e) { generateChunk(); }
+        } catch(NoSuchElementException e) { 
+            queueChunkGeneration(1, -1); 
+        }
     }
 }

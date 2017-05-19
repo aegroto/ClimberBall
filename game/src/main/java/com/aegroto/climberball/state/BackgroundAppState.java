@@ -36,10 +36,12 @@ public class BackgroundAppState extends BaseAppState {
         
         backgroundGeom.getMaterial().setFloat("SlidingSpeed", 0.25f);
         
-        backgroundGeom.getMaterial().setFloat("ColorVariationSpeed", 0.2f);
-        backgroundGeom.getMaterial().setFloat("ColorBrightnessVariation", 0.35f);
-        backgroundGeom.getMaterial().setFloat("ColorRedVariation", 0.3f);
-        backgroundGeom.getMaterial().setFloat("ColorGreenVariation", -0.2f);
+        backgroundGeom.getMaterial().setFloat("ColorVariationSpeed", 0.02f);
+        backgroundGeom.getMaterial().setFloat("ColorBrightnessVariation", 1.5f);
+        
+        backgroundGeom.getMaterial().setFloat("ColorRedVariation", -3.0f);
+        backgroundGeom.getMaterial().setFloat("ColorGreenVariation", -0.1f);
+        backgroundGeom.getMaterial().setFloat("ColorBlueVariation", 3.0f);
     }
 
     @Override

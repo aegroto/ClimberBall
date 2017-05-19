@@ -26,7 +26,8 @@ public class Skin {
     @Getter protected final SurfaceSkin plainSkin, rockSkin, sandSkin, grassSkin;  
     @Getter protected final Material backgroundMaterial,
                                      pickupBorderMaterial,
-                                     speedPickupMaterial;
+                                     speedPickupMaterial,
+                                     smootherPickupMaterial;
     @Getter protected final BitmapFont guiFont;
     
     private Texture initializeTexture(AssetManager assetManager,String location) {
@@ -75,6 +76,9 @@ public class Skin {
         
         speedPickupMaterial=unshadedMat.clone();
         speedPickupMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/pickups/speed.png"));
+        
+        smootherPickupMaterial=unshadedMat.clone();
+        smootherPickupMaterial.setTexture("ColorMap",initializeTexture(assetManager,assetsFolder+"/pickups/smoother.png"));
         
         pickupBorderMaterial=animatedSpriteMat.clone();
         pickupBorderMaterial.setFloat("totalFrames", 31);

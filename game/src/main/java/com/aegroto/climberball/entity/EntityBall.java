@@ -83,7 +83,7 @@ public class EntityBall extends Entity {
         switchForm();
     }
     
-    @Setter private float rotationSpeed=FastMath.QUARTER_PI/64f;
+    @Setter private float rotationSpeed = FastMath.QUARTER_PI/64f;
     //private final float[] rotation={0f,0f,0f};
     private float rotation = 0f;
     
