@@ -30,10 +30,12 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +54,8 @@ public final class EnvironmentAppState extends BaseAppState {
     @Getter protected ArrayList<EntityPickup> pickupList;
     protected ScheduledThreadPoolExecutor executor;
     
-    protected Stack<Integer> chunkGenerationQueue;
+    protected int minChunks;
+    protected ArrayDeque<Integer> chunkGenerationQueue;
     
     protected Skin skin;
     
@@ -80,7 +83,6 @@ public final class EnvironmentAppState extends BaseAppState {
         
         this.chunkList = new LinkedList();  
         this.pickupList = new ArrayList();
-        this.chunkGenerationQueue = new Stack<Integer>();
     }
     
     @Override
@@ -113,9 +115,11 @@ public final class EnvironmentAppState extends BaseAppState {
         changeSurfaceVariationEnhancer=0f;
                 
         rootNode.attachChild(terrainNode);
-        int initialChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f) + 1;
+        minChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f) + 1;
         
-        while(chunkList.size()<initialChunks) { 
+        this.chunkGenerationQueue = new ArrayDeque(minChunks);
+        
+        while(chunkList.size() < minChunks) { 
             generateChunk(nextChunkSurface());
         }
         
@@ -235,16 +239,17 @@ public final class EnvironmentAppState extends BaseAppState {
     
     @Override
     public void update(float tpf) {
-        if(!chunkGenerationQueue.isEmpty()) {
+        if(!chunkGenerationQueue.isEmpty() && chunkList.size() < minChunks) {
             generateChunk(chunkGenerationQueue.pop());
         }
         
-        TerrainChunk first=chunkList.getFirst();
+        TerrainChunk first = chunkList.getFirst();
         
         if(first.isDestroyed()) {
             first.destroy();
             // generateChunk();
-            queueChunkGeneration(1, -1);
+            if(chunkGenerationQueue.size() < minChunks)
+                queueChunkGeneration(1, -1);
             chunkList.removeFirst();
         }
         
