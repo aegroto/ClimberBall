@@ -106,13 +106,13 @@ public final class EnvironmentAppState extends BaseAppState {
         maxSpeed = Helpers.INITIAL_MAX_SPEED;
         speedVariationEnhancer = 0f;
         
-        pickupSpawningFactor=10f;
-        pickupSpawningVariation=Helpers.INITIAL_PICKUP_SPAWNING_VARIATION;  
-        pickupSpawningVariationEnhancer=0f;
+        pickupSpawningFactor = 10f;
+        pickupSpawningVariation = Helpers.INITIAL_PICKUP_SPAWNING_VARIATION;  
+        pickupSpawningVariationEnhancer = 0f;
         
-        changeSurfaceTypeFactor=10f;
-        changeSurfaceVariation=Helpers.INITIAL_CHANGE_SURFACE_VARIATION;  
-        changeSurfaceVariationEnhancer=0f;
+        changeSurfaceTypeFactor = 1.3f;
+        changeSurfaceVariation = Helpers.INITIAL_CHANGE_SURFACE_VARIATION;  
+        changeSurfaceVariationEnhancer = 0f;
                 
         rootNode.attachChild(terrainNode);
         minChunks=(int) ((Coordinate2D.getSettings().getWidth() / Helpers.getTerrainChunkSize()) * 1.5f) + 1;
@@ -148,11 +148,15 @@ public final class EnvironmentAppState extends BaseAppState {
         int nextChunkSurface;
         
         if(FastMath.nextRandomFloat() > changeSurfaceTypeFactor) {
-            nextChunkSurface=FastMath.nextRandomInt(0,3);
+            nextChunkSurface=FastMath.nextRandomInt(0,3);                    
             
-            changeSurfaceVariation=Helpers.INITIAL_CHANGE_SURFACE_VARIATION-changeSurfaceVariationEnhancer;            
-            changeSurfaceTypeFactor=1f;
-            changeSurfaceVariationEnhancer-=Helpers.CHANGE_SURFACE_VARIATION_ENHANCING;
+            // System.out.println("Changing surface type!");
+            
+            changeSurfaceVariation = Helpers.INITIAL_CHANGE_SURFACE_VARIATION - changeSurfaceVariationEnhancer;            
+            changeSurfaceTypeFactor = 1f;
+            changeSurfaceVariationEnhancer -= Helpers.CHANGE_SURFACE_VARIATION_ENHANCING;
+            
+            changeSurfaceVariation*=2;
         } else {
             if(chunkList.size()>0) {        
                 nextChunkSurface=chunkList.getLast().getSurfaceType();
@@ -211,20 +215,29 @@ public final class EnvironmentAppState extends BaseAppState {
                 break;                 
         }
         
-        pickupSpawningFactor-= pickupSpawningVariation;
+        pickupSpawningFactor -= pickupSpawningVariation;
         pickupSpawningVariation*=2;
         
-        changeSurfaceTypeFactor-=changeSurfaceVariation;
-        changeSurfaceVariation*=2;
+        changeSurfaceTypeFactor -= changeSurfaceVariation;
     }
     
-    public void queueChunkGeneration(int n, int surfaceType) {
+    public void tailQueueChunkGeneration(int n, int surfaceType) {
         if(surfaceType == -1) {
             for(int i = 0; i < n; i++) 
-                chunkGenerationQueue.push(nextChunkSurface());
+                chunkGenerationQueue.addLast(nextChunkSurface());
         } else {
             for(int i = 0; i < n; i++) 
-                chunkGenerationQueue.push(surfaceType);
+                chunkGenerationQueue.addLast(surfaceType);
+        }
+    }
+    
+    public void headQueueChunkGeneration(int n, int surfaceType) {
+        if(surfaceType == -1) {
+            for(int i = 0; i < n; i++) 
+                chunkGenerationQueue.addFirst(nextChunkSurface());
+        } else {
+            for(int i = 0; i < n; i++) 
+                chunkGenerationQueue.addFirst(surfaceType);
         }
     }
     
@@ -240,6 +253,7 @@ public final class EnvironmentAppState extends BaseAppState {
     @Override
     public void update(float tpf) {
         if(!chunkGenerationQueue.isEmpty() && chunkList.size() < minChunks) {
+            // System.out.println(chunkGenerationQueue + "\t" + changeSurfaceTypeFactor);
             generateChunk(chunkGenerationQueue.pop());
         }
         
@@ -248,8 +262,8 @@ public final class EnvironmentAppState extends BaseAppState {
         if(first.isDestroyed()) {
             first.destroy();
             // generateChunk();
-            if(chunkGenerationQueue.size() < minChunks)
-                queueChunkGeneration(1, -1);
+            if(chunkGenerationQueue.isEmpty())
+                tailQueueChunkGeneration(1, -1);
             chunkList.removeFirst();
         }
         
@@ -279,7 +293,7 @@ public final class EnvironmentAppState extends BaseAppState {
         try {
             chunkList.getFirst().checkForBarrage(xBarrage);
         } catch(NoSuchElementException e) { 
-            queueChunkGeneration(1, -1); 
+            tailQueueChunkGeneration(1, -1); 
         }
     }
 }

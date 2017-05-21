@@ -81,26 +81,28 @@ public class Main extends SimpleApplication {
     
     private static ScheduledThreadPoolExecutor executor;
 
-    @Setter private static boolean androidLaunch = false;
+    @Setter private static boolean 
+            androidLaunch = false,
+            hasSecondChance = true;
     
     public static final class UpdateSwitches {
         public static boolean
-            initCacheAppState=false,
-            initSkinAppState=false,
-            initSoundAppState=false,
-            initGuiAppState=false,
-            initBackgroundAppState=false,
-            initEnvironmentAppState=false,
+            initCacheAppState = false,
+            initSkinAppState = false,
+            initSoundAppState = false,
+            initGuiAppState = false,
+            initBackgroundAppState = false,
+            initEnvironmentAppState = false,
             
-            initOptionsMenu=false,
-            initStartMenu=false,
-            initPlayerAppState=false,
-            initGameOverMenu=false,
+            initOptionsMenu = false,
+            initStartMenu = false,
+            initPlayerAppState = false,
+            initGameOverMenu = false,
             //Various
-            resetGame=false,
-            hasSecondChance=true,
+            resetGame = false,
+            useSecondChance = false,
         
-            loadOptions=false;
+            loadOptions = false;
     }
     
     @Getter private static final UpdateSwitches UPDATE_SWITCHES = new UpdateSwitches();
@@ -138,15 +140,16 @@ public class Main extends SimpleApplication {
     @Setter private static Callable secondChanceCallable=new Callable<Object>() {
         @Override
         public Object call() {
+            System.out.println("Second chance callback");
             useSecondChance();
             return null;
         }
     };
         
-    private static void useSecondChance() {
-        playerAppState.useSecondChance();
-        guiAppState.removeMenu(gameOverMenu);
-        UPDATE_SWITCHES.hasSecondChance=false;
+    public static void useSecondChance() {
+        System.out.println("Second chance method");
+        UPDATE_SWITCHES.useSecondChance = true;
+        // hasSecondChance = false;
     }
     
     @Override
@@ -210,7 +213,7 @@ public class Main extends SimpleApplication {
         inGameMenu=new InGameMenu();
         guiAppState.addMenu(inGameMenu);
         
-        UPDATE_SWITCHES.hasSecondChance = true;
+        hasSecondChance = true;
     }
 
     @Override
@@ -261,6 +264,13 @@ public class Main extends SimpleApplication {
             resetGame();
             
             UPDATE_SWITCHES.resetGame=false;
+        } else if(UPDATE_SWITCHES.useSecondChance) {
+            System.out.println("Using second chance");
+            playerAppState.useSecondChance();
+            guiAppState.removeMenu(gameOverMenu);
+            
+            hasSecondChance = false;
+            UPDATE_SWITCHES.useSecondChance = false;
         }
         
         //MENUS
@@ -281,7 +291,7 @@ public class Main extends SimpleApplication {
                     this,
                     cacheAppState.getCacheManager(),
                     playerAppState.getScore(),
-                    UPDATE_SWITCHES.hasSecondChance);               
+                    hasSecondChance);               
             guiAppState.addMenu(gameOverMenu);
             
             UPDATE_SWITCHES.initGameOverMenu=false;
@@ -298,7 +308,7 @@ public class Main extends SimpleApplication {
             
             soundAppState.setEffectsVolume(effectsVolume);
             soundAppState.setMusicVolume(musicVolume);
-        }
+        } 
      }
     
     @Override

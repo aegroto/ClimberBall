@@ -4,6 +4,7 @@ buildscript {
     }
     
     dependencies {
+        classpath 'com.google.gms:google-services:3.1.0'
         classpath 'com.android.tools.build:gradle:2.2.0'
     }
 }
@@ -63,7 +64,7 @@ dependencies {
     
     compile 'com.github.jMonkeyEngine.jmonkeyengine:jme3-android:'+jmeversion
     compile 'com.github.jMonkeyEngine.jmonkeyengine:jme3-android-native:'+jmeversion 
-    compile 'com.google.firebase:firebase-ads:10.0.1'
+    compile 'com.google.firebase:firebase-ads:10.2.6'
 
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'

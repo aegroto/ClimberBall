@@ -74,6 +74,7 @@ public class MainActivity extends Activity implements RewardedVideoAdListener {
                     @Override
                     public void run() {                
                         showRewardedVideo();
+                        Main.useSecondChance();
                     }
                 });
                 return null;

@@ -29,7 +29,7 @@ public class EntityPickupSmoother extends EntityPickup {
     }
     @Override
     public void onPick(EntityBall ball) {
-        environmentAppState.queueChunkGeneration(15, 0);
+        environmentAppState.headQueueChunkGeneration(15, 0);
         
         picked = true;
         destroy();
