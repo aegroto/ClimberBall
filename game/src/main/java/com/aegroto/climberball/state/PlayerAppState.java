@@ -27,6 +27,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,7 +44,6 @@ import lombok.Setter;
  * @author lorenzo
  */
 public final class PlayerAppState extends BaseAppState implements ActionListener {
-
     private EntityBall ball;
     private final Skin skin;
     private final Node rootNode;
@@ -59,6 +59,8 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     protected boolean gameLost = false;
 
     private Vector3f targetPos;
+    
+    protected Vector2f[] switchingScreenBlocks;
     //protected float xSpeed, ySpeed;
 
     @Getter
@@ -76,6 +78,28 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         this.chunkList = chunkList;
         this.pickupList = pickupList;
         this.guiAppState = guiAppState;
+        
+        this.switchingScreenBlocks = new Vector2f[8];
+        
+        this.switchingScreenBlocks[0] = 
+                new Coordinate2D(0f, 0f).toVector();
+        this.switchingScreenBlocks[1] = 
+                new Coordinate2D(Helpers.SWITCHING_SCREENSPACE, Helpers.SWITCHING_SCREENSPACE).toVector();         
+        
+        this.switchingScreenBlocks[2] = 
+                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, .0f).toVector();
+        this.switchingScreenBlocks[3] = 
+                new Coordinate2D(1f, Helpers.SWITCHING_SCREENSPACE).toVector();      
+        
+        this.switchingScreenBlocks[4] = 
+                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, 1f - Helpers.SWITCHING_SCREENSPACE).toVector();
+        this.switchingScreenBlocks[5] = 
+                new Coordinate2D(1f, 1f).toVector();
+        
+        this.switchingScreenBlocks[6] = 
+                new Coordinate2D(0f, 1f - Helpers.SWITCHING_SCREENSPACE).toVector();
+        this.switchingScreenBlocks[7] = 
+                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, 1f).toVector();  
     }
 
     @Override
@@ -187,9 +211,9 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     public void useSecondChance() {
         gameLost = false;
         ball.safeSetPos(new Vector2f(0f, chunkList.getFirst().getTargetVector().y));
-        while (ball.getCurrentForm() != 0) {
-            ball.switchForm();
-        }
+        
+        ball.switchForm(EntityBall.FORM_PLAIN);
+        
         ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED * 7.5f);
     }
 
@@ -198,9 +222,10 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         switch (name) {
             case "Touch":
                 if (!isPressed && !gameLost) {
-                    boolean canSwitchForm = true;
+                    boolean canSwitchForm = true;                    
+                    Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
+                    
                     for(EntityPickup pickup:pickupList) {
-                        Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
                         if(Helpers.pointInArea(mousePos,
                                                pickup.getPickupZoneMin(),
                                                pickup.getPickupZoneMax()) &&
@@ -215,7 +240,14 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                     }
                     
                     if(canSwitchForm) {
-                        ball.switchForm();
+                        if(Helpers.pointInArea(mousePos, switchingScreenBlocks[0], switchingScreenBlocks[1]))
+                            ball.switchForm(EntityBall.FORM_PLAIN);
+                        else if(Helpers.pointInArea(mousePos, switchingScreenBlocks[2], switchingScreenBlocks[3]))
+                            ball.switchForm(EntityBall.FORM_ROCK);
+                        else if(Helpers.pointInArea(mousePos, switchingScreenBlocks[4], switchingScreenBlocks[5]))
+                            ball.switchForm(EntityBall.FORM_SAND);
+                        else if(Helpers.pointInArea(mousePos, switchingScreenBlocks[6], switchingScreenBlocks[7]))
+                            ball.switchForm(EntityBall.FORM_GRASS);
 
                         soundAppState.stopSound("effect_switch");
                         soundAppState.playSound("effect_switch");

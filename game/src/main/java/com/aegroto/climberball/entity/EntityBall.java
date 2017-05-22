@@ -32,7 +32,13 @@ import lombok.Setter;
  */
 public class EntityBall extends Entity {
     public static final byte 
-            EFFECT_SPEED_PICKUP_BOOST = 0;
+        FORM_PLAIN = 0,
+        FORM_ROCK = 1,
+        FORM_SAND = 2,
+        FORM_GRASS = 3;
+    
+    public static final byte 
+        EFFECT_SPEED_PICKUP_BOOST = 0;
     
     protected Geometry borderGeom;
     protected Material borderMaterial;
@@ -79,8 +85,7 @@ public class EntityBall extends Entity {
         
         rootNode.attachChild(node);
         
-        currentForm=-1;
-        switchForm();
+        switchForm((byte) 0);
     }
     
     @Setter private float rotationSpeed = FastMath.QUARTER_PI/64f;
@@ -92,8 +97,9 @@ public class EntityBall extends Entity {
     private float             
             borderScalingSpeed = .0001f,
             borderScale = 1f,
-            targetBorderScale,
-            
+            targetBorderScale;
+    
+    private final float 
             maxBorderScale = 2.5f,
             minBorderScale = .4f,
             
@@ -167,9 +173,10 @@ public class EntityBall extends Entity {
         Helpers.safeLocalTranslation(node,new Vector3f(pos.x,pos.y,2f));
     }
     
-    public int switchForm() {
-        currentForm++;
-        if(currentForm==4) currentForm=0;
+    public int switchForm(byte currentForm) {
+        this.currentForm = currentForm;
+        // currentForm++;
+        // if(currentForm==4) currentForm=0;
         
         switch(currentForm) {
             case 1:

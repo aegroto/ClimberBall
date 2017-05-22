@@ -17,7 +17,7 @@ import com.jme3.scene.Node;
  * @author lorenzo
  */
 public class EntityPickupSmoother extends EntityPickup {
-    private EnvironmentAppState environmentAppState;
+    private final EnvironmentAppState environmentAppState;
     
     public EntityPickupSmoother(Node rootNode,Vector3f spawnPos, EnvironmentAppState environmentAppState, Skin skin, AssetManager assetManager) {
         super(rootNode,spawnPos,skin,assetManager);
