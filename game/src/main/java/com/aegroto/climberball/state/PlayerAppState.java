@@ -59,8 +59,6 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
     protected boolean gameLost = false;
 
     private Vector3f targetPos;
-    
-    protected Vector2f[] switchingScreenBlocks;
     //protected float xSpeed, ySpeed;
 
     @Getter
@@ -78,28 +76,6 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         this.chunkList = chunkList;
         this.pickupList = pickupList;
         this.guiAppState = guiAppState;
-        
-        this.switchingScreenBlocks = new Vector2f[8];
-        
-        this.switchingScreenBlocks[0] = 
-                new Coordinate2D(0f, 0f).toVector();
-        this.switchingScreenBlocks[1] = 
-                new Coordinate2D(Helpers.SWITCHING_SCREENSPACE, Helpers.SWITCHING_SCREENSPACE).toVector();         
-        
-        this.switchingScreenBlocks[2] = 
-                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, .0f).toVector();
-        this.switchingScreenBlocks[3] = 
-                new Coordinate2D(1f, Helpers.SWITCHING_SCREENSPACE).toVector();      
-        
-        this.switchingScreenBlocks[4] = 
-                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, 1f - Helpers.SWITCHING_SCREENSPACE).toVector();
-        this.switchingScreenBlocks[5] = 
-                new Coordinate2D(1f, 1f).toVector();
-        
-        this.switchingScreenBlocks[6] = 
-                new Coordinate2D(0f, 1f - Helpers.SWITCHING_SCREENSPACE).toVector();
-        this.switchingScreenBlocks[7] = 
-                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, 1f).toVector();  
     }
 
     @Override
@@ -216,13 +192,20 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
         
         ball.setXSpeed(Helpers.INITIAL_PLAYER_SPEED * 7.5f);
     }
+    
+    public void switchForm(byte form) {
+        ball.switchForm(form);
+        
+        soundAppState.stopSound("effect_switch");
+        soundAppState.playSound("effect_switch");
+    }
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
         switch (name) {
             case "Touch":
                 if (!isPressed && !gameLost) {
-                    boolean canSwitchForm = true;                    
+                    // boolean canSwitchForm = true;                    
                     Vector2f mousePos = getApplication().getInputManager().getCursorPosition();
                     
                     for(EntityPickup pickup:pickupList) {
@@ -234,12 +217,12 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
                                     .showInfoText("Whoa! You've got a " + pickup.getName() + " !");
                             pickup.applyOnBall(ball);
                             
-                            canSwitchForm = false;
+                            // canSwitchForm = false;
                             break;
                         }
                     }
                     
-                    if(canSwitchForm) {
+                    /*if(canSwitchForm) {
                         if(Helpers.pointInArea(mousePos, switchingScreenBlocks[0], switchingScreenBlocks[1]))
                             ball.switchForm(EntityBall.FORM_PLAIN);
                         else if(Helpers.pointInArea(mousePos, switchingScreenBlocks[2], switchingScreenBlocks[3]))
@@ -251,7 +234,7 @@ public final class PlayerAppState extends BaseAppState implements ActionListener
 
                         soundAppState.stopSound("effect_switch");
                         soundAppState.playSound("effect_switch");
-                    }
+                    }*/
                 }
                 break;
         }

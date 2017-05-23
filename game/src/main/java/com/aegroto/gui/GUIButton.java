@@ -44,7 +44,13 @@ public abstract class GUIButton extends GUIInteractiveElement {
         
         text.center(img);
     }
+    
     public GUIButton(Vector2f pos,Vector2f sc,String txt,String imagePath,
+                    BitmapFont gF,AssetManager am,Node mn,ArrayList iGuiList) {
+        this(pos, sc, txt, imagePath, imagePath.split("\\.")[0]+"_pressed.png", gF, am, mn, iGuiList);  
+    }
+    
+    public GUIButton(Vector2f pos,Vector2f sc,String txt,String imagePath, String imagePathPressed,
                     BitmapFont gF,AssetManager am,Node mn,ArrayList iGuiList) {
         this.aM=am;
         this.mN=mn;
@@ -53,7 +59,7 @@ public abstract class GUIButton extends GUIInteractiveElement {
         this.scale=sc;
         
         this.imagePath=imagePath;
-        this.imagePressedPath=imagePath.split("\\.")[0]+"_pressed.png";
+        this.imagePressedPath=imagePathPressed;
         
         this.pos=pos;
         
@@ -67,8 +73,6 @@ public abstract class GUIButton extends GUIInteractiveElement {
         img.attach(text);   
         
         interactiveGUIsList=iGuiList;
-        
-
     }
     
     public GUIButton(Vector2f pos,Vector2f sc,String txt,float textSizeFactor,

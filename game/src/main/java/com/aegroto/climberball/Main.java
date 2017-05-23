@@ -98,6 +98,7 @@ public class Main extends SimpleApplication {
             initStartMenu = false,
             initPlayerAppState = false,
             initGameOverMenu = false,
+            initInGameMenu = false,
             //Various
             resetGame = false,
             useSecondChance = false,
@@ -192,7 +193,8 @@ public class Main extends SimpleApplication {
                    !guiAppState.hasMenu(gameOverMenu) &&
                    !guiAppState.hasMenu(optionsMenu)) UPDATE_SWITCHES.initGameOverMenu=true;
             } else {
-                inGameMenu.setScoreText(playerAppState.getScore());
+                if(inGameMenu != null)
+                    inGameMenu.setScoreText(playerAppState.getScore());
             }
         }
     }
@@ -210,8 +212,7 @@ public class Main extends SimpleApplication {
         if(guiAppState.hasMenu(startMenu)) guiAppState.removeMenu(startMenu);
         if(guiAppState.hasMenu(inGameMenu)) guiAppState.removeMenu(inGameMenu);
         
-        inGameMenu=new InGameMenu();
-        guiAppState.addMenu(inGameMenu);
+        UPDATE_SWITCHES.initInGameMenu = true;
         
         hasSecondChance = true;
     }
@@ -295,6 +296,11 @@ public class Main extends SimpleApplication {
             guiAppState.addMenu(gameOverMenu);
             
             UPDATE_SWITCHES.initGameOverMenu=false;
+        } else if(UPDATE_SWITCHES.initInGameMenu) {
+            inGameMenu = new InGameMenu(skinAppState.getCurrentSkin(), playerAppState);
+            guiAppState.addMenu(inGameMenu);
+        
+            UPDATE_SWITCHES.initInGameMenu = false;
         } else if(UPDATE_SWITCHES.loadOptions) { 
             double effectsVolume = 0, musicVolume = 0;
             
