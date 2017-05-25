@@ -37,7 +37,9 @@ public final class Helpers {
     public static final int UPDATE_TIME=10;
     
     public static final float 
-            SWITCHING_SCREENSPACE = .3f,
+            SWITCHING_SCREENSPACE_X = .2f,
+            SWITCHING_SCREENSPACE_Y = .3f,
+            
             INITIAL_SPEED = 3.00f,
             INITIAL_MAX_SPEED = 3.50f,
             SPEED_VARIATION=1.001f,

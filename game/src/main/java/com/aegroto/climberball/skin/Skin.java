@@ -97,7 +97,11 @@ public class Skin {
                 initializeTexture(assetManager,assetsFolder+"/ball/plain.png"),
                 initializeTexture(assetManager,assetsFolder+"/ball/rock.png"),
                 initializeTexture(assetManager,assetsFolder+"/ball/sand.png"),
-                initializeTexture(assetManager,assetsFolder+"/ball/grass.png")
+                initializeTexture(assetManager,assetsFolder+"/ball/grass.png"),
+                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_plain.png"),
+                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_rock.png"),
+                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_sand.png"),
+                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_grass.png")
         );
         
         guiFont=assetManager.loadFont(assetsFolder+"/font/font.fnt");

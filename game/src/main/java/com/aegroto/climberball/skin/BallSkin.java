@@ -16,6 +16,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BallSkin {
     @Getter private final Texture
-            corePlainTexture,coreRockTexture,coreSandTexture,coreGrassTexture,
-            plainTexture,rockTexture,sandTexture,grassTexture;
+            corePlainTexture, coreRockTexture, coreSandTexture, coreGrassTexture,
+            plainTexture, rockTexture, sandTexture, grassTexture,
+            switcherPlainTexture, switcherRockTexture, switcherSandTexture, switcherGrassTexture;
 }

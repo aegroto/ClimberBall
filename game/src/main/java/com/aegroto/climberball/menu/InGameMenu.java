@@ -32,22 +32,24 @@ public final class InGameMenu extends Menu {
     
     private final Skin skin;
     private final PlayerAppState playerAppState;
-    private final Vector2f[] switchingScreenBlocks;
+    private final Vector2f[] switcherScreenBlocks;
     
     public InGameMenu(Skin skin, PlayerAppState playerAppState) {
         this.skin = skin;
         this.playerAppState = playerAppState;
         
-        this.switchingScreenBlocks = new Vector2f[8];
+        this.switcherScreenBlocks = new Vector2f[8];
         
-        this.switchingScreenBlocks[0] = 
-                new Coordinate2D(0f, 0f).toVector();            
-        this.switchingScreenBlocks[1] = 
-                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, .0f).toVector();
-        this.switchingScreenBlocks[2] = 
-                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE, 1f - Helpers.SWITCHING_SCREENSPACE).toVector();
-        this.switchingScreenBlocks[3] = 
-                new Coordinate2D(0f, 1f - Helpers.SWITCHING_SCREENSPACE).toVector();  
+        float switcherOffset = -.02f;
+        
+        this.switcherScreenBlocks[0] = 
+                new Coordinate2D(switcherOffset, switcherOffset).toVector();            
+        this.switcherScreenBlocks[1] = 
+                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE_X - switcherOffset, switcherOffset).toVector();
+        this.switcherScreenBlocks[2] = 
+                new Coordinate2D(1f - Helpers.SWITCHING_SCREENSPACE_X - switcherOffset, 1f - Helpers.SWITCHING_SCREENSPACE_Y - switcherOffset).toVector();
+        this.switcherScreenBlocks[3] = 
+                new Coordinate2D(switcherOffset, 1f - Helpers.SWITCHING_SCREENSPACE_Y - switcherOffset).toVector();  
     }
     @Override
     public void onAttach(GuiAppState guiAppState) {
@@ -75,11 +77,11 @@ public final class InGameMenu extends Menu {
         
         if(plainSwitchButton == null) {            
             plainSwitchButton = new GUIButton(
-                    switchingScreenBlocks[0],
-                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE, Helpers.SWITCHING_SCREENSPACE).toVector(),
+                    switcherScreenBlocks[0],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getCorePlainTexture().getKey().getName(),
-                    skin.getBallSkin().getCorePlainTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherPlainTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherPlainTexture().getKey().getName(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -92,11 +94,11 @@ public final class InGameMenu extends Menu {
         
         if(rockSwitchButton == null) {            
             rockSwitchButton = new GUIButton(
-                    switchingScreenBlocks[1],
-                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE, Helpers.SWITCHING_SCREENSPACE).toVector(),
+                    switcherScreenBlocks[1],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getCoreRockTexture().getKey().getName(),
-                    skin.getBallSkin().getCoreRockTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherRockTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherRockTexture().getKey().getName(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -109,11 +111,11 @@ public final class InGameMenu extends Menu {
         
         if(sandSwitchButton == null) {            
             sandSwitchButton = new GUIButton(
-                    switchingScreenBlocks[2],
-                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE, Helpers.SWITCHING_SCREENSPACE).toVector(),
+                    switcherScreenBlocks[2],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getCoreSandTexture().getKey().getName(),
-                    skin.getBallSkin().getCoreSandTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherSandTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherSandTexture().getKey().getName(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -126,11 +128,11 @@ public final class InGameMenu extends Menu {
         
         if(grassSwitchButton == null) {            
             grassSwitchButton = new GUIButton(
-                    switchingScreenBlocks[3],
-                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE, Helpers.SWITCHING_SCREENSPACE).toVector(),
+                    switcherScreenBlocks[3],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getCoreGrassTexture().getKey().getName(),
-                    skin.getBallSkin().getCoreGrassTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherGrassTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherGrassTexture().getKey().getName(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
