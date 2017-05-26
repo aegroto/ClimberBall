@@ -98,10 +98,14 @@ public class Skin {
                 initializeTexture(assetManager,assetsFolder+"/ball/rock.png"),
                 initializeTexture(assetManager,assetsFolder+"/ball/sand.png"),
                 initializeTexture(assetManager,assetsFolder+"/ball/grass.png"),
-                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_plain.png"),
-                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_rock.png"),
-                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_sand.png"),
-                initializeTexture(assetManager,assetsFolder+"/ball/switchers/switcher_grass.png")
+                assetsFolder+"/ball/switchers/switcher_plain.png",
+                assetsFolder+"/ball/switchers/switcher_rock.png",
+                assetsFolder+"/ball/switchers/switcher_sand.png",
+                assetsFolder+"/ball/switchers/switcher_grass.png",
+                assetsFolder+"/ball/switchers/switcher_plain_activated.png",
+                assetsFolder+"/ball/switchers/switcher_rock_activated.png",
+                assetsFolder+"/ball/switchers/switcher_sand_activated.png",
+                assetsFolder+"/ball/switchers/switcher_grass_activated.png"
         );
         
         guiFont=assetManager.loadFont(assetsFolder+"/font/font.fnt");

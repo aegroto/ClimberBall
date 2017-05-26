@@ -40,7 +40,7 @@ public final class InGameMenu extends Menu {
         
         this.switcherScreenBlocks = new Vector2f[8];
         
-        float switcherOffset = -.02f;
+        float switcherOffset = 0f;
         
         this.switcherScreenBlocks[0] = 
                 new Coordinate2D(switcherOffset, switcherOffset).toVector();            
@@ -64,6 +64,8 @@ public final class InGameMenu extends Menu {
             );
         }
         
+        scoreText.centerX();
+        
         if(infoText == null) {
             infoText=new GUIText(
                     new Coordinate2D(0f,.85f).toVector(),
@@ -80,8 +82,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[0],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherPlainTexture().getKey().getName(),
-                    skin.getBallSkin().getSwitcherPlainTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherPlainTexture(),
+                    skin.getBallSkin().getSwitcherPlainActivatedTexture(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -97,8 +99,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[1],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherRockTexture().getKey().getName(),
-                    skin.getBallSkin().getSwitcherRockTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherRockTexture(),
+                    skin.getBallSkin().getSwitcherRockActivatedTexture(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -114,8 +116,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[2],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherSandTexture().getKey().getName(),
-                    skin.getBallSkin().getSwitcherSandTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherSandTexture(),
+                    skin.getBallSkin().getSwitcherSandActivatedTexture(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -131,8 +133,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[3],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherGrassTexture().getKey().getName(),
-                    skin.getBallSkin().getSwitcherGrassTexture().getKey().getName(),
+                    skin.getBallSkin().getSwitcherGrassTexture(),
+                    skin.getBallSkin().getSwitcherGrassActivatedTexture(),
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
