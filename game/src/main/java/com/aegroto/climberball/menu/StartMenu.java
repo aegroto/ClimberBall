@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
 public class StartMenu extends Menu {
     private GUIButton background;
     private GUIText titleText;
-    private GUIMultipleLineText explainationText;
+    private GUIMultipleLineText explaination0Text;
     
     private GUIImage
             ballPlainImage,ballRockImage,ballSandImage,ballGrassImage,
@@ -101,20 +101,22 @@ public class StartMenu extends Menu {
             titleText.centerX();
         }
         
-        if(explainationText == null) {
-            explainationText=new GUIMultipleLineText(
-                    new Coordinate2D(0f, .65f).toVector(),
+        if(explaination0Text == null) {
+            explaination0Text=new GUIMultipleLineText(
+                    new Coordinate2D(0f, .85f).toVector(),
                       "Switch between the 4 forms (plain,rock,sand,grass) to adapt the terrain \n"
                     + "Pay attention because walking with an unfit form makes you slow,until \n"
-                    + "the ball falls into the darkness (game over).",
+                    + "the ball falls into the darkness (game over). \n\n\n"
+                    + "Use the four buttons in the corners to switch between various forms.\n"
+                    + "They're called switchers, surprisingly.",
                     .2f, Coordinate2D.yConvert(.035f),
                     guiAppState.getGuiFont(), 
                     guiAppState.getGuiConjunctionNode()
             );           
         
-            explainationText.centerX();
+            explaination0Text.centerX();
         }
-        
+
         Vector2f imageScale=new Coordinate2D(.06f,.1f).toVector();
         
         if(ballPlainImage == null) {
@@ -212,7 +214,7 @@ public class StartMenu extends Menu {
         attachElement(optionsButton);
         
         attachElement(titleText);
-        attachElement(explainationText);
+        attachElement(explaination0Text);
         
         attachElement(ballPlainImage);
         attachElement(ballRockImage);
