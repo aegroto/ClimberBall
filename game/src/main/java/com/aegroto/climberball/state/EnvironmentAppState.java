@@ -243,11 +243,11 @@ public final class EnvironmentAppState extends BaseAppState {
     
     protected void checkMaxSpeed(float score) {
         if(score >= 350f)
-            maxSpeed = 8f;
+            maxSpeed = 9f;
         else if(score >= 200f)
-            maxSpeed = 7f;
+            maxSpeed = 8f;
         else if(score >= 50f)
-            maxSpeed = 5.5f;        
+            maxSpeed = 6f;        
     }
     
     @Override
