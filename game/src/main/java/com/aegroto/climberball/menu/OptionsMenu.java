@@ -102,10 +102,12 @@ public class OptionsMenu extends Menu {
                 musicVolume = (double) cacheManager.getCacheBlock("MusicVolume");
         }*/
         
+        Vector2f checkboxScale = new Coordinate2D(.07f, .1f).toVector();
+        
         if(musicCheckbox == null) {
             musicCheckbox=new GUICheckbox(
                 new Coordinate2D(.8f,.65f).toVector(),
-                new Coordinate2D(.1f, .1f).toVector(),
+                checkboxScale,
                 guiAppState.getAssetManager(),
                 guiAppState.getGuiConjunctionNode(),
                 guiAppState.getInteractiveGUIsList()
@@ -127,7 +129,7 @@ public class OptionsMenu extends Menu {
         if(effectsCheckbox == null) {
             effectsCheckbox=new GUICheckbox(
                 new Coordinate2D(.8f,.5f).toVector(),
-                new Coordinate2D(.1f, .1f).toVector(),
+                checkboxScale,
                 guiAppState.getAssetManager(),
                 guiAppState.getGuiConjunctionNode(),
                 guiAppState.getInteractiveGUIsList()
