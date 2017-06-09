@@ -11,10 +11,13 @@ import com.aegroto.climberball.state.PlayerAppState;
 import com.aegroto.common.Coordinate2D;
 import com.aegroto.common.Helpers;
 import com.aegroto.gui.GUIButton;
+import com.aegroto.gui.GUIImage;
 import com.aegroto.gui.GUIMultipleLineText;
 import com.aegroto.gui.GUIText;
 import com.aegroto.gui.menu.Menu;
 import com.aegroto.gui.states.GuiAppState;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.Vector2f;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,6 +31,7 @@ import lombok.Getter;
 public final class InGameMenu extends Menu {
     private GUIText scoreText, infoText;
     
+    private GUIImage plainSwitcher, rockSwitcher, sandSwitcher, grassSwitcher;
     private GUIButton plainSwitchButton, rockSwitchButton, sandSwitchButton, grassSwitchButton;
     
     private final Skin skin;
@@ -77,13 +81,74 @@ public final class InGameMenu extends Menu {
             infoText.centerX();
         }
         
+        Material switcherMat=new Material(guiAppState.getAssetManager(), "materials/FloatingSprite/FloatingSprite.j3md");
+        switcherMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);  
+        
+        if(plainSwitcher == null) {            
+            plainSwitcher = new GUIImage(
+                    switcherScreenBlocks[0],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
+                    skin.getBallSkin().getSwitcherPlainTexture(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+            
+            switcherMat.setTexture("atlas", 
+                    guiAppState.getAssetManager().loadTexture(skin.getBallSkin().getSwitcherPlainTexture()));
+            plainSwitcher.getPicture().setMaterial(switcherMat.clone());
+        }
+        
+        if(rockSwitcher == null) {            
+            rockSwitcher = new GUIImage(
+                    switcherScreenBlocks[1],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
+                    skin.getBallSkin().getSwitcherRockTexture(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+            
+            switcherMat.setTexture("atlas", 
+                    guiAppState.getAssetManager().loadTexture(skin.getBallSkin().getSwitcherRockTexture()));
+            rockSwitcher.getPicture().setMaterial(switcherMat.clone());
+        }
+        
+        if(sandSwitcher == null) {            
+            sandSwitcher = new GUIImage(
+                    switcherScreenBlocks[2],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
+                    skin.getBallSkin().getSwitcherSandTexture(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+            
+            switcherMat.setTexture("atlas", 
+                    guiAppState.getAssetManager().loadTexture(skin.getBallSkin().getSwitcherSandTexture()));
+            sandSwitcher.getPicture().setMaterial(switcherMat.clone());
+        }
+        
+        if(grassSwitcher == null) {            
+            grassSwitcher = new GUIImage(
+                    switcherScreenBlocks[3],
+                    new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
+                    skin.getBallSkin().getSwitcherGrassTexture(),
+                    guiAppState.getAssetManager(), 
+                    guiAppState.getGuiConjunctionNode()
+            );
+            
+            switcherMat.setTexture("atlas", 
+                    guiAppState.getAssetManager().loadTexture(skin.getBallSkin().getSwitcherGrassTexture()));
+            grassSwitcher.getPicture().setMaterial(switcherMat.clone());
+        }
+        
+        String blankTexturePath = skin.getBlankTexture().getKey().getName();
+        
         if(plainSwitchButton == null) {            
             plainSwitchButton = new GUIButton(
                     switcherScreenBlocks[0],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherPlainTexture(),
-                    skin.getBallSkin().getSwitcherPlainActivatedTexture(),
+                    blankTexturePath,
+                    blankTexturePath,
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -99,8 +164,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[1],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherRockTexture(),
-                    skin.getBallSkin().getSwitcherRockActivatedTexture(),
+                    blankTexturePath,
+                    blankTexturePath,
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -116,8 +181,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[2],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherSandTexture(),
-                    skin.getBallSkin().getSwitcherSandActivatedTexture(),
+                    blankTexturePath,
+                    blankTexturePath,
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -133,8 +198,8 @@ public final class InGameMenu extends Menu {
                     switcherScreenBlocks[3],
                     new Coordinate2D(Helpers.SWITCHING_SCREENSPACE_X, Helpers.SWITCHING_SCREENSPACE_Y).toVector(),
                     "", 
-                    skin.getBallSkin().getSwitcherGrassTexture(),
-                    skin.getBallSkin().getSwitcherGrassActivatedTexture(),
+                    blankTexturePath,
+                    blankTexturePath,
                     guiAppState.getGuiFont(),
                     guiAppState.getAssetManager(), 
                     guiAppState.getGuiConjunctionNode(),
@@ -145,6 +210,10 @@ public final class InGameMenu extends Menu {
             };
         }
         
+        attachElement(plainSwitcher);
+        attachElement(rockSwitcher);
+        attachElement(sandSwitcher);
+        attachElement(grassSwitcher);
         attachElement(plainSwitchButton);
         attachElement(rockSwitchButton);
         attachElement(sandSwitchButton);
