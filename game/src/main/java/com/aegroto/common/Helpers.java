@@ -37,8 +37,8 @@ public final class Helpers {
     public static final int UPDATE_TIME=10;
     
     public static final float 
-            SWITCHING_SCREENSPACE_X = .2f,
-            SWITCHING_SCREENSPACE_Y = .3f,
+            SWITCHING_SCREENSPACE_X = .15f,
+            SWITCHING_SCREENSPACE_Y = .225f,
             
             INITIAL_SPEED = 3.00f,
             INITIAL_MAX_SPEED = 3.50f,
@@ -46,7 +46,7 @@ public final class Helpers {
             SPEED_VARIATION_ENHANCING=0.00005f,
             
             INITIAL_CHANGE_SURFACE_VARIATION=.005f,   
-            CHANGE_SURFACE_VARIATION_ENHANCING=.005f,
+            CHANGE_SURFACE_VARIATION_ENHANCING=.0025f,
             
             INITIAL_PICKUP_SPAWNING_VARIATION=.00000005f,   
             PICKUP_SPAWNING_VARIATION_ENHANCING=.0000001f,

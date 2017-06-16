@@ -29,6 +29,7 @@ public class EntityPickupSmoother extends EntityPickup {
     }
     @Override
     public void onPick(EntityBall ball) {
+        ball.applyEffect(EntityBall.EFFECT_SPEED_PICKUP_BOOST);
         environmentAppState.headQueueChunkGeneration(10, 0);
         
         picked = true;

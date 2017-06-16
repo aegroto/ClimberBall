@@ -95,7 +95,7 @@ public class EntityBall extends Entity {
     /*private final float 
             particlesSpeed = .05f;*/
     private float             
-            borderScalingSpeed = .0001f,
+            borderScalingSpeed = .000001f,
             borderScale = 1f,
             targetBorderScale;
     
@@ -142,7 +142,7 @@ public class EntityBall extends Entity {
     public void applyEffect(byte effectId) {
         switch(effectId) {
             case EFFECT_SPEED_PICKUP_BOOST:
-                queueBorderScaling(1.5f, .05f);
+                queueBorderScaling(1.5f, .0001f);
                 break;
         }
     }
@@ -197,7 +197,7 @@ public class EntityBall extends Entity {
         }
         
         resetBorderScaling();
-        queueBorderScaling(.4f, .2f);
+        queueBorderScaling(.4f, .001f);
         
         return currentForm;
     }
