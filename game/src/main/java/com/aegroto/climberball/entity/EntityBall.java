@@ -100,6 +100,8 @@ public class EntityBall extends Entity {
             targetBorderScale;
     
     private final float 
+            borderScalingTolerance = .05f,
+            
             maxBorderScale = 2.5f,
             minBorderScale = .4f,
             
@@ -114,14 +116,14 @@ public class EntityBall extends Entity {
         material.setFloat("RotationAngle", rotation);
         borderMaterial.setFloat("RotationAngle", rotation);
         
-        if(rotation <= -FastMath.TWO_PI) rotation=0f;
+        if(rotation <= -FastMath.TWO_PI) rotation = 0f;
         
         if(borderScale < targetBorderScale) {
             borderScale += borderScalingSpeed;
             
             if(borderScale >= targetBorderScale) {
                 targetBorderScale = 1f;
-            } else if(FastMath.abs(borderScale - 1f) < borderScalingSpeed) {
+            } else if(FastMath.abs(borderScale - 1f) < borderScalingTolerance) {
                 resetBorderScaling();
             }
             
@@ -131,7 +133,7 @@ public class EntityBall extends Entity {
             
             if(borderScale <= targetBorderScale) {
                 targetBorderScale = 1f;
-            } else if(FastMath.abs(borderScale - 1f) < borderScalingSpeed) {
+            } else if(FastMath.abs(borderScale - 1f) < borderScalingTolerance) {
                 resetBorderScaling();
             }
             
@@ -142,7 +144,7 @@ public class EntityBall extends Entity {
     public void applyEffect(byte effectId) {
         switch(effectId) {
             case EFFECT_SPEED_PICKUP_BOOST:
-                queueBorderScaling(1.5f, .0001f);
+                queueBorderScaling(1.5f, .075f);
                 break;
         }
     }
@@ -197,7 +199,7 @@ public class EntityBall extends Entity {
         }
         
         resetBorderScaling();
-        queueBorderScaling(.4f, .001f);
+        queueBorderScaling(.4f, .05f);
         
         return currentForm;
     }
